@@ -2,338 +2,142 @@ import { storage } from "../storage.js";
 
 export default function render(container) {
   const renderContent = () => {
-    const data = storage.load();
-    const subjects = data.subjects || [];
-    // Determine active day: default to today, or first day
-    let today = new Date().toLocaleDateString("en-US", { weekday: "long" });
-    // Retrieve last active tab from memory if needed, but for now just use today
+    const subjects = storage.get("subjects") || [];
+    const activeDay = localStorage.getItem("activeScheduleDay") || "Monday";
 
     container.innerHTML = `
-            <div class="schedule-container">
-                <div class="page-header">
-                    <div>
-                        <h2>Weekly Timetable</h2>
-                        <p class="summary-text">Manage your class times and study blocks.</p>
-                    </div>
-                    <button id="add-schedule-btn" class="btn-primary">Add Class</button>
+            <div>
+                <div class="row" style="align-items:center; margin-bottom:20px;">
+                    <h2>Schedule</h2>
+                    <button id="add-class-btn" class="btn-primary">Add Class</button>
                 </div>
 
-                <div class="tabs-container">
-                    <div class="schedule-tabs">
-                        ${[
-                          "Monday",
-                          "Tuesday",
-                          "Wednesday",
-                          "Thursday",
-                          "Friday",
-                          "Saturday",
-                          "Sunday",
-                        ]
-                          .map(
-                            (day) =>
-                              `<button class="tab-btn ${day === today ? "active" : ""}" data-day="${day}">${day}</button>`,
-                          )
-                          .join("")}
-                    </div>
+                <div class="tabs">
+                    ${["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+                      .map(
+                        (d) =>
+                          `<button class="tab-btn ${d === activeDay ? "active" : ""}" data-day="${d}">${d}</button>`,
+                      )
+                      .join("")}
                 </div>
 
-                <div id="schedule-display" class="schedule-list-view">
-                    <!-- Schedule items injected here -->
+                <div id="schedule-list" style="margin-top:20px;">
+                    <!-- Schedule items -->
                 </div>
 
                 <!-- Modal -->
-                <div id="schedule-modal" class="modal hidden">
+                <div id="sch-modal" class="modal hidden">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h2>Add Schedule Item</h2>
-                            <button class="close-modal" id="close-modal-x">&times;</button>
+                            <h3>Add Class</h3>
+                            <button class="close-modal" id="close-sch">X</button>
                         </div>
-                        <form id="schedule-form">
+                        <form id="sch-form">
                             <div class="form-group">
-                                <label>Day of Week</label>
-                                <select id="sch-day">
-                                    <option value="Monday">Monday</option>
-                                    <option value="Tuesday">Tuesday</option>
-                                    <option value="Wednesday">Wednesday</option>
-                                    <option value="Thursday">Thursday</option>
-                                    <option value="Friday">Friday</option>
-                                    <option value="Saturday">Saturday</option>
-                                    <option value="Sunday">Sunday</option>
+                                <label>Day</label>
+                                <select id="s-day">
+                                    <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
+                                    <option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
                                 </select>
                             </div>
-
                             <div class="form-group">
                                 <label>Subject</label>
-                                <select id="sch-subject" required>
-                                    <option value="">Select Subject</option>
+                                <select id="s-subject">
                                     ${subjects.map((s) => `<option value="${s.id}">${s.name}</option>`).join("")}
                                 </select>
                             </div>
-
                             <div class="row">
-                                <div class="form-group">
-                                    <label>Start Time</label>
-                                    <input type="time" id="sch-start" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>End Time</label>
-                                    <input type="time" id="sch-end" required>
-                                </div>
+                                <div class="form-group"><label>Start</label><input type="time" id="s-start" required></div>
+                                <div class="form-group"><label>End</label><input type="time" id="s-end" required></div>
                             </div>
-                            
                             <div class="form-group">
-                                <label>Location / Room</label>
-                                <input type="text" id="sch-room" placeholder="e.g. Room 304">
+                                <label>Room</label>
+                                <input type="text" id="s-room">
                             </div>
-
-                            <div class="modal-actions">
-                                <button type="button" class="btn-sec" id="cancel-sch">Cancel</button>
-                                <button type="submit" class="btn-primary">Save Schedule</button>
-                            </div>
+                            <button type="submit" class="btn-primary" style="width:100%">Save</button>
                         </form>
                     </div>
                 </div>
             </div>
-
             <style>
-                .page-header {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    margin-bottom: 2rem;
-                    padding-bottom: 1rem;
-                    border-bottom: 1px solid var(--border);
-                }
-
-                .page-header h2 { font-size: 1.5rem; margin-bottom: 0.25rem; }
-                .summary-text { color: var(--text-muted); font-size: 0.9rem; }
-
-                .tabs-container {
-                    margin-bottom: 1.5rem;
-                    border-bottom: 1px solid var(--border);
-                }
-
-                .schedule-tabs {
-                    display: flex;
-                    gap: 1.5rem;
-                    overflow-x: auto;
-                    padding-bottom: 2px; /* For focus outline */
-                }
-
-                .tab-btn {
-                    padding: 0.75rem 0;
-                    border: none;
-                    background: none;
-                    cursor: pointer;
-                    color: var(--text-muted);
-                    font-weight: 500;
-                    font-size: 0.95rem;
-                    position: relative;
-                    transition: color 0.2s;
-                    white-space: nowrap;
-                }
-
-                .tab-btn:hover { color: var(--primary); }
-
-                .tab-btn.active {
-                    color: var(--primary);
-                    font-weight: 600;
-                }
-
-                .tab-btn.active::after {
-                    content: '';
-                    position: absolute;
-                    bottom: -1px;
-                    left: 0;
-                    width: 100%;
-                    height: 2px;
-                    background: var(--primary);
-                }
-
-                .schedule-list-view {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 1rem;
-                    min-height: 200px;
-                }
-                
-                .schedule-card {
-                    display: grid;
-                    grid-template-columns: 100px 1fr auto;
-                    align-items: center;
-                    background: var(--bg-surface);
-                    padding: 1.25rem;
-                    border-radius: var(--radius-md);
-                    border: 1px solid var(--border);
-                    transition: border-color 0.2s;
-                }
-                
-                .schedule-card:hover {
-                    border-color: var(--border-hover);
-                    box-shadow: var(--shadow-sm);
-                }
-
-                .time-group {
-                    display: flex;
-                    flex-direction: column;
-                    font-size: 0.9rem;
-                    font-weight: 600;
-                    color: var(--text-main);
-                }
-                .time-group span:last-child {
-                    font-weight: 400;
-                    color: var(--text-muted);
-                    font-size: 0.8rem;
-                }
-
-                .class-info h3 { margin: 0 0 0.25rem 0; font-size: 1.1rem; }
-                .class-info p { margin: 0; color: var(--text-muted); font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; }
-                
-                .room-badge {
-                    background: var(--bg-body);
-                    padding: 0.15rem 0.5rem;
-                    border-radius: 4px;
-                    font-size: 0.75rem;
-                    border: 1px solid var(--border);
-                }
-
-                .delete-sch-btn {
-                    background: none;
-                    border: none;
-                    color: var(--text-light);
-                    cursor: pointer;
-                    padding: 0.5rem;
-                    border-radius: 4px;
-                    transition: 0.2s;
-                }
-                .delete-sch-btn:hover { color: var(--danger); background: #fee2e2; }
-
-                .empty-day-state {
-                    text-align: center;
-                    padding: 4rem 1rem;
-                    color: var(--text-muted);
-                    background: var(--bg-surface);
-                    border-radius: var(--radius-md);
-                    border: 1px dashed var(--border);
-                }
+                .tabs { display: flex; gap: 10px; border-bottom: 1px solid #ddd; padding-bottom: 10px; overflow-x: auto;}
+                .tab-btn { background: none; border: none; padding: 10px; cursor: pointer; color: #666; }
+                .tab-btn.active { color: #4361ee; font-weight: bold; border-bottom: 2px solid #4361ee; }
+                .sch-item { display:flex; justify-content:space-between; align-items:center; background: white; padding: 15px; margin-bottom:10px; border-radius:4px; border:1px solid #ddd; }
             </style>
         `;
 
-    setupEvents(container);
-
-    const activeBtn =
-      container.querySelector(".tab-btn.active") || container.querySelector(".tab-btn");
-    if (activeBtn) {
-      activeBtn.click(); // Trigger load
-    }
+    setupEvents();
+    renderScheduleList(activeDay);
   };
 
-  const setupEvents = (container) => {
-    // Tab Switching
-    container.querySelectorAll(".tab-btn").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        container.querySelectorAll(".tab-btn").forEach((b) => b.classList.remove("active"));
+  const setupEvents = () => {
+    const modal = document.getElementById("sch-modal");
+    document.getElementById("add-class-btn").onclick = () => modal.classList.remove("hidden");
+    document.getElementById("close-sch").onclick = () => modal.classList.add("hidden");
+
+    document.querySelectorAll(".tab-btn").forEach((btn) => {
+      btn.onclick = () => {
+        document.querySelectorAll(".tab-btn").forEach((b) => b.classList.remove("active"));
         btn.classList.add("active");
-        showDaySchedule(btn.dataset.day);
-      });
+        localStorage.setItem("activeScheduleDay", btn.dataset.day);
+        renderScheduleList(btn.dataset.day);
+      };
     });
 
-    // Modal
-    const modal = container.querySelector("#schedule-modal");
-    const form = container.querySelector("#schedule-form");
-
-    container.querySelector("#add-schedule-btn").onclick = () => modal.classList.remove("hidden");
-    container.querySelector("#cancel-sch").onclick = () => modal.classList.add("hidden");
-    container.querySelector("#close-modal-x").onclick = () => modal.classList.add("hidden");
-
-    // Form Submit
-    form.onsubmit = (e) => {
+    document.getElementById("sch-form").onsubmit = (e) => {
       e.preventDefault();
-      const subjectId = document.getElementById("sch-subject").value;
-      const day = document.getElementById("sch-day").value;
-      const start = document.getElementById("sch-start").value;
-      const end = document.getElementById("sch-end").value;
-      const room = document.getElementById("sch-room").value;
-
-      // Conflict Check
-      const currentSchedule = storage.get("schedule") || [];
-      const hasConflict = currentSchedule.some(
-        (s) =>
-          s.day === day &&
-          ((start >= s.startTime && start < s.endTime) || (end > s.startTime && end <= s.endTime)),
-      );
-
-      if (hasConflict) {
-        alert("Conflict detected: You already have a class during this time slot.");
-        return;
-      }
-
-      storage.addItem("schedule", {
+      const data = {
         id: crypto.randomUUID(),
-        day,
-        subjectId,
-        startTime: start,
-        endTime: end,
-        room,
-      });
-
+        day: document.getElementById("s-day").value,
+        subjectId: document.getElementById("s-subject").value,
+        startTime: document.getElementById("s-start").value,
+        endTime: document.getElementById("s-end").value,
+        room: document.getElementById("s-room").value,
+      };
+      storage.addItem("schedule", data);
       modal.classList.add("hidden");
-      form.reset();
+      document.getElementById("sch-form").reset();
 
-      // Refresh view if on same day
-      const activeDay = container.querySelector(".tab-btn.active").dataset.day;
-      if (activeDay === day) {
-        showDaySchedule(day);
-      } else {
-        // Switch key
-        container.querySelector(`.tab-btn[data-day="${day}"]`).click();
-      }
+      // If added to current view, refresh
+      const active = document.querySelector(".tab-btn.active").dataset.day;
+      if (data.day === active) renderScheduleList(active);
     };
   };
 
-  const showDaySchedule = (day) => {
-    const display = document.getElementById("schedule-display");
+  const renderScheduleList = (day) => {
+    const list = document.getElementById("schedule-list");
     const data = storage.load();
-    const schedule = (data.schedule || [])
+    const items = data.schedule
       .filter((s) => s.day === day)
       .sort((a, b) => a.startTime.localeCompare(b.startTime));
 
-    if (schedule.length === 0) {
-      display.innerHTML = '<div class="empty-day-state">No classes scheduled for this day.</div>';
+    if (items.length === 0) {
+      list.innerHTML = '<p style="text-align:center; padding:20px; color:gray;">Free day!</p>';
       return;
     }
 
-    display.innerHTML = schedule
+    list.innerHTML = items
       .map((item) => {
-        const subject = data.subjects.find((s) => s.id === item.subjectId) || {
-          name: "Unknown",
-          color: "#ccc",
-        };
+        const sub = data.subjects.find((s) => s.id === item.subjectId);
         return `
-                <div class="schedule-card" style="border-left: 4px solid ${subject.color}">
-                    <div class="time-group">
-                        <span>${item.startTime}</span>
-                        <span>${item.endTime}</span>
+                <div class="sch-item" style="border-left: 4px solid ${sub ? sub.color : "#ccc"}">
+                    <div>
+                        <strong>${item.startTime} - ${item.endTime}</strong>
+                        <span>${sub ? sub.name : "Unknown"}</span>
+                        <small>(${item.room})</small>
                     </div>
-                    <div class="class-info">
-                        <h3>${subject.name}</h3>
-                        <p>
-                            <span class="room-badge">${item.room || "online"}</span>
-                        </p>
-                    </div>
-                    <button class="delete-sch-btn" data-id="${item.id}" title="Remove Class">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                    </button>
+                    <button class="btn-sec del-sch" data-id="${item.id}">Remove</button>
                 </div>
             `;
       })
       .join("");
 
-    display.querySelectorAll(".delete-sch-btn").forEach((btn) => {
+    list.querySelectorAll(".del-sch").forEach((btn) => {
       btn.onclick = () => {
-        if (confirm("Remove this class from schedule?")) {
+        if (confirm("Remove?")) {
           storage.deleteItem("schedule", btn.dataset.id);
-          showDaySchedule(day);
+          renderScheduleList(day);
         }
       };
     });

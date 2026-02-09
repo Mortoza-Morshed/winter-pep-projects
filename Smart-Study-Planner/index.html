@@ -21,66 +21,33 @@
   </head>
   <body>
     <div class="app-container">
-      <!-- Sidebar Navigation -->
       <aside class="sidebar" id="sidebar">
         <div class="logo-area">
-          <span class="logo-icon">📚</span>
-          <span class="logo-text">
-            Study
-            <span class="highlight">Smart</span>
-          </span>
+          <span class="logo-text">StudyPlanner</span>
         </div>
 
         <nav class="nav-menu">
-          <button class="nav-btn active" data-view="dashboard">
-            <span class="icon">📊</span>
-            Dashboard
-          </button>
-          <button class="nav-btn" data-view="subjects">
-            <span class="icon">📚</span>
-            Subjects
-          </button>
-          <button class="nav-btn" data-view="schedule">
-            <span class="icon">📅</span>
-            Schedule
-          </button>
-          <button class="nav-btn" data-view="tasks">
-            <span class="icon">✅</span>
-            Tasks
-          </button>
-          <button class="nav-btn" data-view="analytics">
-            <span class="icon">📈</span>
-            Analytics
-          </button>
-          <button class="nav-btn" data-view="settings">
-            <span class="icon">⚙️</span>
-            Settings
-          </button>
+          <button class="nav-btn active" data-view="dashboard">Dashboard</button>
+          <button class="nav-btn" data-view="subjects">Subjects</button>
+          <button class="nav-btn" data-view="schedule">Schedule</button>
+          <button class="nav-btn" data-view="tasks">Tasks</button>
+          <button class="nav-btn" data-view="analytics">Analytics</button>
+          <button class="nav-btn" data-view="settings">Settings</button>
         </nav>
-
-        <div class="user-profile-mini">
-          <div class="avatar">U</div>
-          <div class="user-info">
-            <span class="name">Student</span>
-            <span class="status">Online</span>
-          </div>
-        </div>
       </aside>
 
-      <!-- Main Content Area -->
       <main class="main-content">
         <header class="top-bar">
-          <button id="menu-toggle" class="menu-toggle" aria-label="Toggle Menu">☰</button>
+          <button class="menu-toggle" id="menu-toggle">Menu</button>
           <h1 id="page-title">Dashboard</h1>
           <div class="header-actions">
-            <span id="current-date" class="date-display"></span>
-            <button class="theme-toggle" id="theme-toggle" aria-label="Toggle Theme">🌙</button>
+            <span class="date-display" id="date-display"></span>
+            <button id="theme-toggle" class="theme-btn">Toggle Theme</button>
           </div>
         </header>
 
-        <div id="app-view" class="view-container">
-          <!-- Views will be injected here by JavaScript -->
-          <div class="loading-state">Loading...</div>
+        <div id="app" class="view-container">
+          <!-- Views are injected here -->
         </div>
       </main>
     </div>

@@ -17,28 +17,26 @@ class App {
     this.setupGlobalEvents();
     this.renderCurrentView();
 
-    // Update date
     this.updateDate();
   }
 
   setupTheme() {
     const settings = storage.get("settings");
-    const savedTheme = settings ? settings.theme : "light";
-    document.documentElement.setAttribute("data-theme", savedTheme);
+    const savedTheme = settings?.theme || "light";
+
+    if (savedTheme === "dark") {
+      document.body.classList.add("dark-theme");
+    }
 
     const themeBtn = document.getElementById("theme-toggle");
     if (themeBtn) {
-      themeBtn.innerHTML = savedTheme === "dark" ? "☀️" : "🌙";
       themeBtn.addEventListener("click", () => this.toggleTheme());
     }
   }
 
   toggleTheme() {
-    const current = document.documentElement.getAttribute("data-theme");
-    const newTheme = current === "dark" ? "light" : "dark";
-
-    document.documentElement.setAttribute("data-theme", newTheme);
-    document.getElementById("theme-toggle").innerHTML = newTheme === "dark" ? "☀️" : "🌙";
+    document.body.classList.toggle("dark-theme");
+    const newTheme = document.body.classList.contains("dark-theme") ? "dark" : "light";
 
     const settings = storage.get("settings") || {};
     settings.theme = newTheme;
@@ -77,10 +75,10 @@ class App {
   }
 
   async renderCurrentView() {
-    const appContainer = document.getElementById("app-view");
+    const appContainer = document.getElementById("app");
     const titleElement = document.getElementById("page-title");
 
-    appContainer.innerHTML = '<div class="loading-state">Loading...</div>'; // Simple loading state
+    appContainer.innerHTML = '<div class="loading-state">Loading...</div>';
 
     try {
       // Dynamic import of view modules
@@ -124,7 +122,7 @@ class App {
   }
 
   updateDate() {
-    const dateEl = document.getElementById("current-date");
+    const dateEl = document.getElementById("date-display");
     const options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
     if (dateEl) {
       dateEl.textContent = new Date().toLocaleDateString("en-US", options);

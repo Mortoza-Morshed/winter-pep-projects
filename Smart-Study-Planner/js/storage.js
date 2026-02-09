@@ -11,7 +11,6 @@ const DEFAULT_DATA = {
   tasks: [], // { id, title, subjectId, dueDate, completed, type }
   settings: {
     theme: "light",
-    username: "Student",
   },
 };
 

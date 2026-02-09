@@ -5,13 +5,13 @@
 
 ---
 
-## 📋 Project Overview
+## Project Overview
 
 The Smart Study Planner is a web-based application designed to help students organize their academic life. Built using pure HTML5, CSS3, and Vanilla JavaScript, this application provides a comprehensive solution for managing subjects, schedules, tasks, and tracking academic progress.
 
 ---
 
-## ✨ Features
+## Features
 
 ### 1. Dashboard
 
@@ -57,7 +57,7 @@ The Smart Study Planner is a web-based application designed to help students org
 
 ---
 
-## 🛠️ Technical Implementation
+## Technical Implementation
 
 ### Technologies Used
 
@@ -97,7 +97,7 @@ Smart-Study-Planner/
 
 ---
 
-## 💾 LocalStorage Implementation
+## LocalStorage Implementation
 
 The application uses a centralized `StorageManager` class to handle all data operations:
 
@@ -131,7 +131,7 @@ The application uses a centralized `StorageManager` class to handle all data ope
 
 ---
 
-## 🎨 Design Guidelines Followed
+## Design Guidelines Followed
 
 - **Consistent Color Scheme**: Professional blue theme
 - **Readable Typography**: Clear fonts with proper sizing
@@ -142,7 +142,7 @@ The application uses a centralized `StorageManager` class to handle all data ope
 
 ---
 
-## 🚀 How to Run
+## How to Run
 
 1. Download or clone the project files
 2. Open `index.html` in any modern web browser
@@ -157,7 +157,7 @@ The application uses a centralized `StorageManager` class to handle all data ope
 
 ---
 
-## 📱 Features Walkthrough
+## Features Walkthrough
 
 ### Adding a Subject
 
@@ -191,7 +191,7 @@ The application uses a centralized `StorageManager` class to handle all data ope
 
 ---
 
-## 📊 Project Evaluation Criteria
+## Project Evaluation Criteria
 
 | Category                              | Implementation                                       |
 | ------------------------------------- | ---------------------------------------------------- |
@@ -203,19 +203,19 @@ The application uses a centralized `StorageManager` class to handle all data ope
 
 ---
 
-## 🔒 Academic Integrity
+## Academic Integrity
 
 This project was developed as original work following the assignment guidelines:
 
-- ✅ No frameworks used (pure vanilla JavaScript)
-- ✅ No templates or copied code
-- ✅ Original design and implementation
-- ✅ Proper LocalStorage implementation
-- ✅ All features working as specified
+- No frameworks used (pure vanilla JavaScript)
+- No templates or copied code
+- Original design and implementation
+- Proper LocalStorage implementation
+- All features working as specified
 
 ---
 
-## 📝 Learning Outcomes
+## Learning Outcomes
 
 Through this project, I gained experience in:
 
@@ -228,19 +228,11 @@ Through this project, I gained experience in:
 
 ---
 
-## 👨‍💻 Developer
+## Live Project Link
 
-**Student Name:** [Your Name]  
-**Submission Date:** February 9, 2026  
-**Project:** Smart Study Planner  
-**Course:** Frontend Development
+[placeholder_link]
 
 ---
 
-## 📄 License
-
-This project is submitted as academic coursework.
-
----
 
 **Note:** This application stores all data locally in your browser. Clearing browser data will remove all stored information.

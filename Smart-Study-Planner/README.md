@@ -230,7 +230,7 @@ Through this project, I gained experience in:
 
 ## Live Project Link
 
-[placeholder_link]
+https://smart-study-planner-production-4d4e.up.railway.app/
 
 ---
 

@@ -104,10 +104,5 @@ All data is stored locally in your browser using LocalStorage under the key `stu
 
 **Note:** Clearing your browser data will delete all your planner information. Use the export/backup feature if you need to preserve your data.
 
-## License
-
-This is a student project - feel free to use and modify as needed for educational purposes.
-
-## Credits
-
-Created as a school project to demonstrate HTML, CSS, and JavaScript skills.
+## Live Project Link
+https://smart-study-planner-production-4d4e.up.railway.app/index.html

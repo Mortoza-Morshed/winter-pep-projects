@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Subjects - Smart Study Planner</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="app-container">
+      <aside class="sidebar">
+        <div class="logo-area">
+          <span class="logo-text">StudyPlanner</span>
+        </div>
+
+        <nav class="nav-menu">
+          <a href="index.html" class="nav-link">Dashboard</a>
+          <a href="subjects.html" class="nav-link">Subjects</a>
+          <a href="schedule.html" class="nav-link">Schedule</a>
+          <a href="tasks.html" class="nav-link">Tasks</a>
+          <a href="analytics.html" class="nav-link">Analytics</a>
+          <a href="settings.html" class="nav-link">Settings</a>
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <header class="top-bar">
+          <h1 id="page-title">Subjects</h1>
+          <div class="header-actions">
+            <span class="date-display" id="date-display"></span>
+            <button id="theme-toggle" class="theme-btn">Toggle Theme</button>
+          </div>
+        </header>
+
+        <div class="view-container">
+          <div class="row" style="margin-bottom: 20px; align-items: center">
+            <h2>Subjects</h2>
+            <button id="add-subject-btn" class="btn-primary">Add Subject</button>
+          </div>
+
+          <div id="subjects-list"></div>
+
+          <div id="subject-modal" class="modal hidden">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h3 id="modal-title">Add Subject</h3>
+                <button class="close-modal" id="close-modal-x">X</button>
+              </div>
+              <form id="subject-form">
+                <input type="hidden" id="sub-id" />
+                <div class="form-group">
+                  <label>Name</label>
+                  <input type="text" id="sub-name" required />
+                </div>
+                <div class="form-group">
+                  <label>Teacher</label>
+                  <input type="text" id="sub-teacher" />
+                </div>
+                <div class="row">
+                  <div class="form-group">
+                    <label>Color</label>
+                    <input type="color" id="sub-color" value="#4361ee" style="height: 40px" />
+                  </div>
+                  <div class="form-group">
+                    <label>Priority</label>
+                    <select id="sub-priority">
+                      <option>High</option>
+                      <option selected>Medium</option>
+                      <option>Low</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="modal-actions">
+                  <button type="button" id="cancel-modal" class="btn-sec">Cancel</button>
+                  <button type="submit" class="btn-primary">Save</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="js/common.js"></script>
+    <script>
+      function renderSubjects() {
+        const data = loadData();
+        const subjects = data.subjects || [];
+        const listEl = document.getElementById("subjects-list");
+
+        if (subjects.length === 0) {
+          listEl.innerHTML = '<p style="color: #666;">No subjects added yet.</p>';
+          return;
+        }
+
+        listEl.innerHTML = subjects
+          .map(
+            (sub) => `
+                <div class="card subject-item" style="border-left: 5px solid ${sub.color}">
+                    <div class="sub-info">
+                        <h3>${sub.name}</h3>
+                        <p>Teacher: ${sub.teacher || "N/A"}</p>
+                        <small>Priority: ${sub.priority}</small>
+                    </div>
+                    <div class="sub-actions">
+                        <button class="btn-sec edit-btn" data-id="${sub.id}">Edit</button>
+                        <button class="btn-sec delete-btn" data-id="${sub.id}">Delete</button>
+                    </div>
+                </div>
+            `,
+          )
+          .join("");
+
+        document.querySelectorAll(".delete-btn").forEach((btn) => {
+          btn.onclick = () => {
+            if (confirm("Delete this subject?")) {
+              deleteItem("subjects", btn.dataset.id);
+              renderSubjects();
+            }
+          };
+        });
+
+        document.querySelectorAll(".edit-btn").forEach((btn) => {
+          btn.onclick = () => {
+            const s = subjects.find((x) => x.id === btn.dataset.id);
+            if (s) {
+              document.getElementById("sub-id").value = s.id;
+              document.getElementById("sub-name").value = s.name;
+              document.getElementById("sub-teacher").value = s.teacher;
+              document.getElementById("sub-color").value = s.color;
+              document.getElementById("sub-priority").value = s.priority;
+              document.getElementById("modal-title").textContent = "Edit Subject";
+              modal.classList.remove("hidden");
+            }
+          };
+        });
+      }
+
+      const modal = document.getElementById("subject-modal");
+      const form = document.getElementById("subject-form");
+
+      document.getElementById("add-subject-btn").onclick = () => {
+        document.getElementById("modal-title").textContent = "Add Subject";
+        modal.classList.remove("hidden");
+      };
+
+      function closeModal() {
+        modal.classList.add("hidden");
+        form.reset();
+        document.getElementById("sub-id").value = "";
+      }
+
+      document.getElementById("close-modal-x").onclick = closeModal;
+      document.getElementById("cancel-modal").onclick = closeModal;
+
+      form.onsubmit = (e) => {
+        e.preventDefault();
+        const id = document.getElementById("sub-id").value;
+        const data = {
+          id: id || crypto.randomUUID(),
+          name: document.getElementById("sub-name").value,
+          teacher: document.getElementById("sub-teacher").value,
+          color: document.getElementById("sub-color").value,
+          priority: document.getElementById("sub-priority").value,
+        };
+
+        if (id) {
+          updateItem("subjects", id, data);
+        } else {
+          addItem("subjects", data);
+        }
+
+        closeModal();
+        renderSubjects();
+      };
+
+      renderSubjects();
+    </script>
+  </body>
+</html>

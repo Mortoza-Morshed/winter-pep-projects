@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tasks - Smart Study Planner</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="app-container">
+      <aside class="sidebar">
+        <div class="logo-area">
+          <span class="logo-text">StudyPlanner</span>
+        </div>
+
+        <nav class="nav-menu">
+          <a href="index.html" class="nav-link">Dashboard</a>
+          <a href="subjects.html" class="nav-link">Subjects</a>
+          <a href="schedule.html" class="nav-link">Schedule</a>
+          <a href="tasks.html" class="nav-link">Tasks</a>
+          <a href="analytics.html" class="nav-link">Analytics</a>
+          <a href="settings.html" class="nav-link">Settings</a>
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <header class="top-bar">
+          <h1 id="page-title">Tasks</h1>
+          <div class="header-actions">
+            <span class="date-display" id="date-display"></span>
+            <button id="theme-toggle" class="theme-btn">Toggle Theme</button>
+          </div>
+        </header>
+
+        <div class="view-container">
+          <div class="row" style="margin-bottom: 20px; align-items: center">
+            <h2>Tasks</h2>
+            <button id="new-task-btn" class="btn-primary">New Task</button>
+          </div>
+
+          <div class="filters" style="margin-bottom: 20px">
+            <button class="filter-btn active" data-f="all">All</button>
+            <button class="filter-btn" data-f="pending">Pending</button>
+            <button class="filter-btn" data-f="completed">Completed</button>
+          </div>
+
+          <div id="task-list"></div>
+
+          <div id="t-modal" class="modal hidden">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h3>New Task</h3>
+                <button class="close-modal" id="close-t">X</button>
+              </div>
+              <form id="t-form">
+                <div class="form-group">
+                  <label>Title</label>
+                  <input type="text" id="t-title" required />
+                </div>
+                <div class="form-group">
+                  <label>Subject</label>
+                  <select id="t-sub"></select>
+                </div>
+                <div class="row">
+                  <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" id="t-date" required />
+                  </div>
+                  <div class="form-group">
+                    <label>Type</label>
+                    <select id="t-type">
+                      <option>Assignment</option>
+                      <option>Exam</option>
+                      <option>Project</option>
+                    </select>
+                  </div>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%">Create</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="js/common.js"></script>
+    <script>
+      let filter = "all";
+
+      function renderTasks() {
+        const data = loadData();
+        const tasks = data.tasks || [];
+        const subjects = data.subjects || [];
+
+        const filtered = tasks
+          .filter((t) => {
+            if (filter === "pending") return !t.completed;
+            if (filter === "completed") return t.completed;
+            return true;
+          })
+          .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+
+        const listEl = document.getElementById("task-list");
+
+        if (filtered.length === 0) {
+          listEl.innerHTML = '<p style="color: #666;">No tasks.</p>';
+          return;
+        }
+
+        listEl.innerHTML = filtered
+          .map((t) => {
+            const sub = subjects.find((s) => s.id === t.subjectId);
+            return `
+                    <div class="card task-row ${t.completed ? "done" : ""}" style="border-left: 4px solid ${sub ? sub.color : "#ccc"}">
+                        <div style="display:flex; gap:10px; align-items:center;">
+                            <input type="checkbox" class="t-check" data-id="${t.id}" ${t.completed ? "checked" : ""}>
+                            <div>
+                                <div style="font-weight:bold;">${t.title}</div>
+                                <div style="font-size:0.85rem; color:#666;">${sub ? sub.name : ""} - Due: ${t.dueDate}</div>
+                            </div>
+                        </div>
+                        <button class="btn-sec del-task" data-id="${t.id}">Delete</button>
+                    </div>
+                `;
+          })
+          .join("");
+
+        document.querySelectorAll(".t-check").forEach((cb) => {
+          cb.onchange = () => {
+            const task = tasks.find((t) => t.id === cb.dataset.id);
+            if (task) {
+              updateItem("tasks", task.id, { completed: cb.checked });
+              renderTasks();
+            }
+          };
+        });
+
+        document.querySelectorAll(".del-task").forEach((btn) => {
+          btn.onclick = () => {
+            if (confirm("Delete task?")) {
+              deleteItem("tasks", btn.dataset.id);
+              renderTasks();
+            }
+          };
+        });
+      }
+
+      document.querySelectorAll(".filter-btn").forEach((btn) => {
+        btn.onclick = () => {
+          document.querySelectorAll(".filter-btn").forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          filter = btn.dataset.f;
+          renderTasks();
+        };
+      });
+
+      const modal = document.getElementById("t-modal");
+      document.getElementById("new-task-btn").onclick = () => {
+        const data = loadData();
+        const subjects = data.subjects || [];
+        document.getElementById("t-sub").innerHTML = subjects
+          .map((s) => `<option value="${s.id}">${s.name}</option>`)
+          .join("");
+        modal.classList.remove("hidden");
+      };
+      document.getElementById("close-t").onclick = () => modal.classList.add("hidden");
+
+      document.getElementById("t-form").onsubmit = (e) => {
+        e.preventDefault();
+        const data = {
+          id: crypto.randomUUID(),
+          title: document.getElementById("t-title").value,
+          subjectId: document.getElementById("t-sub").value,
+          dueDate: document.getElementById("t-date").value,
+          type: document.getElementById("t-type").value,
+          completed: false,
+        };
+        addItem("tasks", data);
+        modal.classList.add("hidden");
+        document.getElementById("t-form").reset();
+        renderTasks();
+      };
+
+      renderTasks();
+    </script>
+  </body>
+</html>

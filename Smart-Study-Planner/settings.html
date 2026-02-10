@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings - Smart Study Planner</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="app-container">
+      <aside class="sidebar">
+        <div class="logo-area">
+          <span class="logo-text">StudyPlanner</span>
+        </div>
+
+        <nav class="nav-menu">
+          <a href="index.html" class="nav-link">Dashboard</a>
+          <a href="subjects.html" class="nav-link">Subjects</a>
+          <a href="schedule.html" class="nav-link">Schedule</a>
+          <a href="tasks.html" class="nav-link">Tasks</a>
+          <a href="analytics.html" class="nav-link">Analytics</a>
+          <a href="settings.html" class="nav-link">Settings</a>
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <header class="top-bar">
+          <h1 id="page-title">Settings</h1>
+          <div class="header-actions">
+            <span class="date-display" id="date-display"></span>
+            <button id="theme-toggle" class="theme-btn">Toggle Theme</button>
+          </div>
+        </header>
+
+        <div class="view-container">
+          <div class="settings-container">
+            <h2 style="margin-bottom: 20px">Settings</h2>
+
+            <div class="card settings-card">
+              <h3>Appearance</h3>
+              <form id="set-form">
+                <div class="form-group">
+                  <label>Theme</label>
+                  <select id="set-theme">
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                  </select>
+                </div>
+                <button type="submit" class="btn-primary">Save Settings</button>
+              </form>
+            </div>
+
+            <div class="card settings-card danger-zone">
+              <h3>Data Management</h3>
+              <p class="warning-text">
+                Clear all subjects, tasks, and schedule data. This cannot be undone.
+              </p>
+              <button id="reset-btn" class="btn-danger">Reset All Data</button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="js/common.js"></script>
+    <script>
+      const data = loadData();
+      const currentTheme = data.settings?.theme || "light";
+      document.getElementById("set-theme").value = currentTheme;
+
+      document.getElementById("set-form").onsubmit = (e) => {
+        e.preventDefault();
+        const newTheme = document.getElementById("set-theme").value;
+
+        const data = loadData();
+        data.settings.theme = newTheme;
+        saveData(data);
+
+        if (newTheme === "dark") {
+          document.body.classList.add("dark-theme");
+        } else {
+          document.body.classList.remove("dark-theme");
+        }
+
+        alert("Settings saved successfully!");
+      };
+
+      document.getElementById("reset-btn").onclick = () => {
+        if (confirm("Are you sure you want to delete ALL data? This cannot be undone!")) {
+          resetAllData();
+        }
+      };
+    </script>
+  </body>
+</html>

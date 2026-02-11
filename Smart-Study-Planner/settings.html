@@ -25,6 +25,7 @@
 
       <main class="main-content">
         <header class="top-bar">
+          <button id="menu-toggle">☰</button>
           <h1 id="page-title">Settings</h1>
           <div class="header-actions">
             <span class="date-display" id="date-display"></span>
@@ -48,6 +49,12 @@
                 </div>
                 <button type="submit" class="btn-primary">Save Settings</button>
               </form>
+            </div>
+
+            <div class="card settings-card">
+              <h3>Data Export</h3>
+              <p class="warning-text">Download all your data as a JSON file for backup.</p>
+              <button id="export-btn" class="btn-primary">Export Data</button>
             </div>
 
             <div class="card settings-card danger-zone">
@@ -89,6 +96,11 @@
         if (confirm("Are you sure you want to delete ALL data? This cannot be undone!")) {
           resetAllData();
         }
+      };
+
+      document.getElementById("export-btn").onclick = () => {
+        exportData();
+        alert("Data exported successfully!");
       };
     </script>
   </body>

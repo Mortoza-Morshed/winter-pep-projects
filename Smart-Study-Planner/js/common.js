@@ -88,6 +88,25 @@ function setActiveNav() {
   });
 }
 
+function exportData() {
+  const data = loadData();
+  const dataStr = JSON.stringify(data, null, 2);
+  const blob = new Blob([dataStr], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `study-planner-backup-${new Date().toISOString().split("T")[0]}.json`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
+function toggleMobileMenu() {
+  const sidebar = document.querySelector(".sidebar");
+  sidebar.classList.toggle("mobile-open");
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   initTheme();
   updateDate();
@@ -97,4 +116,16 @@ document.addEventListener("DOMContentLoaded", function () {
   if (themeBtn) {
     themeBtn.addEventListener("click", toggleTheme);
   }
+
+  const menuToggle = document.getElementById("menu-toggle");
+  if (menuToggle) {
+    menuToggle.addEventListener("click", toggleMobileMenu);
+  }
+
+  document.querySelectorAll(".nav-link").forEach((link) => {
+    link.addEventListener("click", () => {
+      const sidebar = document.querySelector(".sidebar");
+      sidebar.classList.remove("mobile-open");
+    });
+  });
 });

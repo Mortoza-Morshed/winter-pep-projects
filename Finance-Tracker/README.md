@@ -2,25 +2,25 @@
 
 A modern, feature-rich Personal Finance Tracker built with React and Firebase. Track your income and expenses with beautiful visualizations, dark mode support, and real-time data synchronization.
 
-## 🚀 Features
+## Features
 
-- ✅ **User Authentication** - Secure signup/login with Firebase Auth
-- ✅ **Transaction Management** - Add, edit, and delete income/expense transactions
-- ✅ **Real-time Sync** - Data synced across devices using Firestore
-- ✅ **Visual Analytics** - Pie charts and bar graphs for spending insights
-- ✅ **Dark/Light Mode** - Toggle between themes with persistent preference
-- ✅ **Advanced Filtering** - Search and filter by type, category, and date
-- ✅ **Responsive Design** - Works seamlessly on desktop, tablet, and mobile
-- ✅ **Modern UI** - Beautiful gradients, animations, and glassmorphism effects
+- **User Authentication** - Secure signup/login with Firebase Auth
+- **Transaction Management** - Add, edit, and delete income/expense transactions
+- **Real-time Sync** - Data synced across devices using Firestore
+- **Visual Analytics** - Pie charts and bar graphs for spending insights
+- **Dark/Light Mode** - Toggle between themes with persistent preference
+- **Advanced Filtering** - Search and filter by type, category, and date
+- **Responsive Design** - Works seamlessly on desktop, tablet, and mobile
+- **Modern UI** - Beautiful gradients, animations, and glassmorphism effects
 
-## 📋 Prerequisites
+## Prerequisites
 
 Before you begin, ensure you have the following installed:
 - **Node.js** (version 16 or higher) - [Download here](https://nodejs.org/)
 - **npm** (comes with Node.js)
 - A **Firebase account** - [Create one here](https://firebase.google.com/)
 
-## 🛠️ Setup Instructions
+## Setup Instructions
 
 ### Step 1: Install Dependencies
 
@@ -98,7 +98,7 @@ npm run dev
 
 The app will open automatically at `http://localhost:3000`
 
-## 📱 How to Use
+## How to Use
 
 1. **Sign Up** - Create a new account with your email and password
 2. **Add Transactions** - Click the "Add Transaction" button to record income or expenses
@@ -108,7 +108,7 @@ The app will open automatically at `http://localhost:3000`
 6. **Edit/Delete** - Click the edit or delete icons on any transaction
 7. **Toggle Theme** - Click the moon/sun icon in the navbar to switch themes
 
-## 🎨 Project Structure
+## Project Structure
 
 ```
 Finance-Tracker/
@@ -136,7 +136,7 @@ Finance-Tracker/
 └── vite.config.js
 ```
 
-## 🚀 Deployment
+## Deployment
 
 ### Deploy to Firebase Hosting
 
@@ -172,17 +172,8 @@ firebase deploy
 
 Your app will be live at: `https://your-project-id.web.app`
 
-## 🎯 Evaluation Criteria Met
 
-- ✅ **UI Design (20 marks)** - Modern gradient design, dark mode, responsive layout
-- ✅ **Features & Functionality (25 marks)** - Full CRUD operations, filtering, charts
-- ✅ **React Code Structure (15 marks)** - Clean component separation, proper hooks usage
-- ✅ **Firebase Usage (15 marks)** - Authentication + Firestore integration
-- ✅ **User Experience (10 marks)** - Smooth navigation, intuitive interface
-- ✅ **Creativity (10 marks)** - Dark mode, charts, custom animations, unique color theme
-- ✅ **Deployment (5 marks)** - Ready to deploy with instructions
-
-## 🎨 Unique Features
+## Unique Features
 
 1. **Dark/Light Mode Toggle** - Persistent theme preference
 2. **Interactive Charts** - Pie chart for categories, bar chart for monthly comparison
@@ -191,16 +182,5 @@ Your app will be live at: `https://your-project-id.web.app`
 5. **Glassmorphism Effects** - Backdrop blur on navbar
 6. **Micro-animations** - Smooth transitions and hover effects throughout
 
-## 🐛 Troubleshooting
 
-- **Firebase errors**: Make sure you've enabled Authentication and Firestore in Firebase Console
-- **Port already in use**: Change the port in `vite.config.js`
-- **Build errors**: Delete `node_modules` and run `npm install` again
 
-## 📝 License
-
-This project is created for educational purposes.
-
----
-
-**Built with ❤️ using React, Firebase, and Vite**

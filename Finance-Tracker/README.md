@@ -1,4 +1,4 @@
-# Finance Tracker - React Project
+# Penny Finance Tracker - React Project
 
 A modern, feature-rich Personal Finance Tracker built with React and Firebase. Track your income and expenses with beautiful visualizations, dark mode support, and real-time data synchronization.
 
@@ -181,6 +181,7 @@ Your app will be live at: https://penny-finance-tracker.vercel.app/
 4. **Modern Color Palette** - Purple/indigo gradient theme instead of default blue
 5. **Glassmorphism Effects** - Backdrop blur on navbar
 6. **Micro-animations** - Smooth transitions and hover effects throughout
+
 
 
 

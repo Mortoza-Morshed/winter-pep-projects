@@ -170,7 +170,7 @@ npm run build
 firebase deploy
 ```
 
-Your app will be live at: `https://your-project-id.web.app`
+Your app will be live at: https://penny-finance-tracker.vercel.app/
 
 
 ## Unique Features
@@ -181,6 +181,7 @@ Your app will be live at: `https://your-project-id.web.app`
 4. **Modern Color Palette** - Purple/indigo gradient theme instead of default blue
 5. **Glassmorphism Effects** - Backdrop blur on navbar
 6. **Micro-animations** - Smooth transitions and hover effects throughout
+
 
 
 

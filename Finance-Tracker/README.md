@@ -16,6 +16,7 @@ A modern, feature-rich Personal Finance Tracker built with React and Firebase. T
 ## Prerequisites
 
 Before you begin, ensure you have the following installed:
+
 - **Node.js** (version 16 or higher) - [Download here](https://nodejs.org/)
 - **npm** (comes with Node.js)
 - A **Firebase account** - [Create one here](https://firebase.google.com/)
@@ -40,21 +41,26 @@ This will install all required packages including React, Firebase, Recharts, and
 4. Register your app with a nickname (e.g., "Finance Tracker")
 5. Copy the Firebase configuration object
 
-### Step 3: Configure Firebase
+### Step 3: Configure Firebase Environment Variables
 
-1. Open `src/firebase.js` in your code editor
-2. Replace the placeholder values with your Firebase config:
+1. In the project root, copy `.env.example` to a new file called `.env`:
 
-```javascript
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
-};
+```bash
+cp .env.example .env
 ```
+
+2. Open `.env` and fill in your Firebase project values (found in Firebase Console → Project Settings → Your Apps → Web App):
+
+```env
+VITE_FIREBASE_API_KEY=AIzaSy...
+VITE_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your-project-id
+VITE_FIREBASE_STORAGE_BUCKET=your-project.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=1234567890
+VITE_FIREBASE_APP_ID=1:123:web:abc
+```
+
+> ⚠️ **Never commit `.env` to git.** It is already listed in `.gitignore`.
 
 ### Step 4: Enable Firebase Services
 
@@ -141,37 +147,42 @@ Finance-Tracker/
 ### Deploy to Firebase Hosting
 
 1. Install Firebase CLI:
+
 ```bash
 npm install -g firebase-tools
 ```
 
 2. Login to Firebase:
+
 ```bash
 firebase login
 ```
 
 3. Initialize Firebase in your project:
+
 ```bash
 firebase init
 ```
-   - Select "Hosting"
-   - Choose your Firebase project
-   - Set public directory to: `dist`
-   - Configure as single-page app: `Yes`
-   - Don't overwrite index.html: `No`
+
+- Select "Hosting"
+- Choose your Firebase project
+- Set public directory to: `dist`
+- Configure as single-page app: `Yes`
+- Don't overwrite index.html: `No`
 
 4. Build your project:
+
 ```bash
 npm run build
 ```
 
 5. Deploy:
+
 ```bash
 firebase deploy
 ```
 
 Your app will be live at: https://penny-finance-tracker.vercel.app/
-
 
 ## Unique Features
 
@@ -181,8 +192,3 @@ Your app will be live at: https://penny-finance-tracker.vercel.app/
 4. **Modern Color Palette** - Purple/indigo gradient theme instead of default blue
 5. **Glassmorphism Effects** - Backdrop blur on navbar
 6. **Micro-animations** - Smooth transitions and hover effects throughout
-
-
-
-
-

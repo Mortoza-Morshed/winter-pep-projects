@@ -45,58 +45,73 @@ const Sidebar = () => {
   const currentMenu = menuItems[user?.role] || [];
 
   return (
-    <aside className="w-60 bg-white border-r border-gray-200 flex flex-col h-full fixed inset-y-0 left-0 z-20">
+    <aside className="w-64 glass border-r border-white/40 flex flex-col h-full fixed inset-y-0 left-0 z-20 m-4 rounded-2xl shadow-xl hidden lg:flex">
       {/* Logo */}
-      <div className="p-6">
-        <div className="flex items-center gap-2">
-          <div className="bg-blue-600 p-1.5 rounded-lg text-white">
-            <LayoutGrid size={22} />
+      <div className="p-6 pb-2">
+        <div className="flex items-center gap-3">
+          <div className="bg-gradient-to-br from-blue-600 to-indigo-600 p-2 rounded-xl text-white shadow-lg shadow-blue-200">
+            <LayoutGrid size={22} strokeWidth={2.5} />
           </div>
-          <span className="text-xl font-bold text-gray-900 tracking-tight">LeaveFlow</span>
+          <span className="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 tracking-tight">
+            LeaveFlow
+          </span>
         </div>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-4 space-y-1 mt-4">
+      <nav className="flex-1 px-4 py-8 space-y-1.5 overflow-y-auto no-scrollbar">
+        <div className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-4 mb-4">
+          Main Menu
+        </div>
         {currentMenu.map((item) => (
           <NavLink
             key={item.path}
             to={item.path}
             end
             className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
+              `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300 ${
                 isActive
-                  ? "bg-blue-600 text-white shadow-md shadow-blue-200"
-                  : "text-gray-600 hover:bg-gray-100"
+                  ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-200/50 translate-x-1"
+                  : "text-gray-500 hover:bg-white/50 hover:text-gray-900"
               }`
             }
           >
-            <item.icon size={20} />
-            {item.label}
+            {({ isActive }) => (
+              <>
+                <item.icon size={20} strokeWidth={isActive ? 2.5 : 2} />
+                {item.label}
+              </>
+            )}
           </NavLink>
         ))}
       </nav>
 
       {/* User Profile / Logout */}
-      <div className="p-4 border-t border-gray-100">
-        <div className="flex items-center gap-3 px-2 mb-4">
-          <div className="bg-blue-50 w-10 h-10 rounded-full flex items-center justify-center text-blue-600 font-bold border border-blue-100">
+      <div className="p-4 mx-4 mb-4 bg-white/50 rounded-2xl border border-white/60 backdrop-blur-sm relative overflow-hidden group">
+        <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <div className="flex items-center gap-3 mb-4 relative z-10">
+          <div className="bg-gradient-to-br from-blue-100 to-indigo-50 w-10 h-10 rounded-xl flex items-center justify-center text-blue-600 font-bold border border-blue-200 shadow-sm">
             {user?.name?.charAt(0) || <UserIcon size={20} />}
           </div>
           <div className="flex-1 overflow-hidden">
-            <p className="text-sm font-bold text-gray-900 truncate">{user?.name}</p>
-            <p className="text-xs text-gray-500 truncate">{user?.role}</p>
+            <p className="text-[13px] font-black text-gray-900 truncate tracking-tight">
+              {user?.name}
+            </p>
+            <p className="text-[10px] font-bold text-blue-600 truncate uppercase tracking-widest mt-0.5">
+              {user?.role}
+            </p>
           </div>
-          <button className="text-gray-400 hover:text-gray-600">
-            <Settings size={18} />
-          </button>
         </div>
         <button
           onClick={handleLogout}
-          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors border border-red-100"
+          className="w-full relative z-10 flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-bold text-gray-500 bg-white hover:bg-red-50 hover:text-red-600 rounded-xl transition-all duration-300 border border-gray-100 hover:border-red-100 shadow-sm group/logout"
         >
-          <LogOut size={18} />
-          Logout
+          <LogOut
+            size={16}
+            strokeWidth={2.5}
+            className="group-hover/logout:-translate-x-1 transition-transform"
+          />
+          Sign Out
         </button>
       </div>
     </aside>

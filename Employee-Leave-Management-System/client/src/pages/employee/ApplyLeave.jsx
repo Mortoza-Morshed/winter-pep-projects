@@ -67,85 +67,127 @@ const ApplyLeave = () => {
   const daysCount = calculateDays(formData.fromDate, formData.toDate);
 
   return (
-    <div className="max-w-3xl mx-auto space-y-8">
-      <div className="flex justify-between items-end">
+    <div className="max-w-6xl mx-auto space-y-8">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
         <div>
-          <h1 className="text-2xl font-black text-gray-900 mb-1">Apply for Leave</h1>
-          <p className="text-gray-500 font-medium text-sm">
-            Fill out the form below to submit your leave request.
+          <h1 className="text-3xl font-black text-gray-900 mb-1 tracking-tight">
+            Request Time Off
+          </h1>
+          <p className="text-gray-500 font-medium text-lg">
+            Submit your leave application for manager approval.
           </p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
         {/* Form Section */}
-        <div className="lg:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label className="block text-sm font-bold text-gray-700 mb-2">Leave Type</label>
-              <select
-                id="leaveType"
-                value={formData.leaveType}
-                onChange={handleChange}
-                className="block w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all outline-none"
-              >
-                <option value="Annual Leave">Annual Leave</option>
-                <option value="Sick Leave">Sick Leave</option>
-                <option value="Personal Leave">Personal Leave</option>
-                <option value="Casual Leave">Casual Leave</option>
-              </select>
+        <div className="lg:col-span-2 bg-white rounded-3xl border border-gray-100 shadow-sm p-8 flex flex-col">
+          <h2 className="text-xl font-black text-gray-900 border-b border-gray-50 pb-4 mb-6">
+            Application Details
+          </h2>
+          <form onSubmit={handleSubmit} className="space-y-8">
+            <div className="space-y-2">
+              <label className="block text-sm font-bold text-gray-700">
+                Type of Leave <span className="text-red-500">*</span>
+              </label>
+              <div className="relative">
+                <select
+                  id="leaveType"
+                  value={formData.leaveType}
+                  onChange={handleChange}
+                  className="block w-full rounded-2xl border border-gray-200 bg-gray-50/50 px-5 py-4 text-[15px] font-bold text-gray-800 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 focus:bg-white transition-all outline-none appearance-none cursor-pointer shadow-sm"
+                >
+                  <option value="Annual Leave">Annual Leave</option>
+                  <option value="Sick Leave">Sick Leave</option>
+                  <option value="Personal Leave">Personal Leave</option>
+                  <option value="Casual Leave">Casual Leave</option>
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-6 text-gray-400">
+                  <svg
+                    className="h-4 w-4 fill-current"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                  </svg>
+                </div>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <Input
-                label="From Date"
-                type="date"
-                id="fromDate"
-                value={formData.fromDate}
-                onChange={handleChange}
-                icon={Calendar}
-                required
-              />
-              <Input
-                label="To Date"
-                type="date"
-                id="toDate"
-                value={formData.toDate}
-                onChange={handleChange}
-                icon={Calendar}
-                required
-              />
+              <div className="space-y-2">
+                <label className="block text-sm font-bold text-gray-700">
+                  Start Date <span className="text-red-500">*</span>
+                </label>
+                <div className="relative">
+                  <Calendar
+                    className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+                    size={20}
+                  />
+                  <input
+                    type="date"
+                    id="fromDate"
+                    value={formData.fromDate}
+                    onChange={handleChange}
+                    required
+                    className="block w-full rounded-2xl border border-gray-200 bg-gray-50/50 pl-12 pr-4 py-4 text-[15px] font-bold text-gray-800 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 focus:bg-white transition-all outline-none shadow-sm"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-sm font-bold text-gray-700">
+                  Return Date <span className="text-red-500">*</span>
+                </label>
+                <div className="relative">
+                  <Calendar
+                    className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+                    size={20}
+                  />
+                  <input
+                    type="date"
+                    id="toDate"
+                    value={formData.toDate}
+                    onChange={handleChange}
+                    required
+                    className="block w-full rounded-2xl border border-gray-200 bg-gray-50/50 pl-12 pr-4 py-4 text-[15px] font-bold text-gray-800 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 focus:bg-white transition-all outline-none shadow-sm"
+                  />
+                </div>
+              </div>
             </div>
 
-            <div>
-              <label htmlFor="reason" className="block text-sm font-bold text-gray-700 mb-2">
-                Reason for Leave
+            <div className="space-y-2">
+              <label htmlFor="reason" className="block text-sm font-bold text-gray-700">
+                Reason / Note for Manager <span className="text-red-500">*</span>
               </label>
               <div className="relative">
-                <FileText className="absolute left-4 top-3.5 text-gray-400" size={18} />
+                <FileText className="absolute left-4 top-5 text-gray-400" size={20} />
                 <textarea
                   id="reason"
                   rows="4"
-                  placeholder="Briefly explain the reason for your leave..."
-                  className="block w-full rounded-xl border border-gray-200 bg-gray-50 pl-12 pr-4 py-3 text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all outline-none"
+                  placeholder="Details regarding your time off..."
+                  className="block w-full rounded-2xl border border-gray-200 bg-gray-50/50 pl-12 pr-5 py-4 text-[15px] font-medium text-gray-800 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 focus:bg-white transition-all outline-none resize-none shadow-sm leading-relaxed"
                   value={formData.reason}
                   onChange={handleChange}
                   required
                 ></textarea>
               </div>
+              <p className="text-xs text-gray-400 font-medium text-right mt-2">
+                Briefly explain your absence.
+              </p>
             </div>
 
-            <div className="flex pt-4">
+            <div className="pt-6 border-t border-gray-50 flex justify-end">
               <Button
                 type="submit"
-                className="w-full sm:w-auto px-8 py-3 flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-10 py-4 text-base rounded-2xl shadow-blue-200 shadow-xl hover:-translate-y-0.5 transition-all flex items-center justify-center gap-3"
                 disabled={isLoading}
               >
                 {isLoading ? (
-                  "Submitting..."
+                  "Processing Application..."
                 ) : (
                   <>
-                    Submit Application <Send size={18} />
+                    Submit Request <Send size={20} />
                   </>
                 )}
               </Button>
@@ -153,27 +195,73 @@ const ApplyLeave = () => {
           </form>
         </div>
 
-        {/* Summary / Stats Card */}
-        <div className="space-y-6">
-          <div className="bg-blue-50 rounded-2xl p-6 border border-blue-100">
-            <div className="flex items-center gap-2 text-blue-700 mb-4 font-black">
-              <Info size={20} />
-              <h3>Application Summary</h3>
+        {/* Summary / Stats Card - Sticky on desktop */}
+        <div className="lg:sticky lg:top-24 space-y-6">
+          <div className="bg-gradient-to-br from-indigo-900 to-gray-900 rounded-3xl p-8 border border-gray-800 shadow-2xl relative overflow-hidden group text-white">
+            <div className="absolute right-0 top-0 w-48 h-48 bg-white opacity-5 rounded-full blur-3xl -mr-10 -mt-10 group-hover:opacity-10 transition-opacity duration-700"></div>
+
+            <div className="flex items-center gap-3 text-blue-300 mb-8 border-b border-white/10 pb-4 relative z-10">
+              <Info size={24} />
+              <h3 className="font-black text-xl">Summary</h3>
             </div>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center text-sm border-b border-blue-100 pb-2">
-                <span className="text-blue-600/70 font-medium">Leave Type:</span>
-                <span className="text-blue-900 font-bold">{formData.leaveType}</span>
+
+            <div className="space-y-6 relative z-10">
+              <div>
+                <span className="text-gray-400 font-bold uppercase tracking-widest text-xs block mb-1">
+                  Leave Category
+                </span>
+                <span className="text-white font-black text-lg">{formData.leaveType}</span>
               </div>
-              <div className="flex justify-between items-center text-sm border-b border-blue-100 pb-2">
-                <span className="text-blue-600/70 font-medium">Duration:</span>
-                <span className="text-blue-900 font-bold text-lg">{daysCount} Days</span>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <span className="text-gray-400 font-bold uppercase tracking-widest text-xs block mb-1">
+                    Start Date
+                  </span>
+                  <span className="text-white font-bold">
+                    {formData.fromDate
+                      ? new Date(formData.fromDate).toLocaleDateString(undefined, {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })
+                      : "--/--/----"}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-gray-400 font-bold uppercase tracking-widest text-xs block mb-1">
+                    Return Date
+                  </span>
+                  <span className="text-white font-bold">
+                    {formData.toDate
+                      ? new Date(formData.toDate).toLocaleDateString(undefined, {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })
+                      : "--/--/----"}
+                  </span>
+                </div>
+              </div>
+
+              <div className="pt-6 border-t border-white/10">
+                <div className="flex justify-between items-end">
+                  <span className="text-gray-400 font-bold uppercase tracking-widest text-xs block">
+                    Total Duration
+                  </span>
+                  <span className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">
+                    {daysCount} Day{daysCount !== 1 && "s"}
+                  </span>
+                </div>
               </div>
             </div>
-            <div className="mt-6 p-4 bg-white/60 rounded-xl">
-              <p className="text-xs text-blue-600/80 leading-relaxed font-bold">
-                Your current balance is <span className="text-blue-700">18 days</span>. This request
-                will deduct from your balance upon approval.
+
+            <div className="mt-8 p-4 bg-white/5 rounded-2xl backdrop-blur-sm border border-white/5 relative z-10">
+              <p className="text-sm text-gray-300 leading-relaxed font-medium">
+                Your current balance is <span className="text-white font-bold">18 days</span>. This
+                request will reduce your balance to{" "}
+                <span className="text-blue-300 font-bold">{Math.max(0, 18 - daysCount)} days</span>{" "}
+                upon manager approval.
               </p>
             </div>
           </div>

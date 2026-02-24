@@ -76,64 +76,92 @@ const LeaveApprovals = () => {
   }
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-black text-gray-900 mb-1">Leave Approvals</h1>
-        <p className="text-gray-500 font-medium tracking-tight">
-          Review and manage pending employee leave requests.
-        </p>
+    <div className="space-y-6 h-full flex flex-col max-w-7xl mx-auto">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
+        <div>
+          <h1 className="text-3xl font-black text-gray-900 mb-1 tracking-tight">Leave Approvals</h1>
+          <p className="text-gray-500 font-medium text-lg">
+            Review and manage pending employee leave requests.
+          </p>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <StatCard
-          title="Pending Requests"
-          value={stats.pending}
-          icon={MessageSquare}
-          color="orange"
-        />
-        <StatCard title="On Leave Today" value={stats.onLeave} icon={Calendar} color="blue" />
-      </div>
-
-      {/* Tabs */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-        <div className="flex border-b border-gray-50 p-2 gap-2 bg-gray-50/50">
-          {["Pending", "Approved", "Rejected", "All History"].map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-6 py-2.5 rounded-xl text-sm font-black uppercase tracking-widest transition-all ${
-                activeTab === tab
-                  ? "bg-white text-blue-600 shadow-sm ring-1 ring-gray-100"
-                  : "text-gray-400 hover:text-gray-600"
-              }`}
-            >
-              {tab}{" "}
-              {tab === "Pending" && stats.pending > 0 && (
-                <span className="ml-2 bg-orange-100 text-orange-600 px-1.5 py-0.5 rounded-lg text-[10px]">
-                  {stats.pending}
-                </span>
-              )}
-            </button>
-          ))}
+        <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-3xl p-6 text-white shadow-xl shadow-orange-200/50 relative overflow-hidden group">
+          <div className="absolute right-0 top-0 w-32 h-32 bg-white opacity-10 rounded-full blur-2xl -mr-10 -mt-10 group-hover:opacity-20 transition-opacity duration-700"></div>
+          <div className="flex items-center justify-between mb-4 relative z-10">
+            <span className="text-orange-100 font-bold uppercase tracking-widest text-xs">
+              Action Required
+            </span>
+            <MessageSquare className="text-orange-200" size={24} />
+          </div>
+          <div className="flex items-baseline gap-2 relative z-10">
+            <h2 className="text-5xl font-black">{stats.pending}</h2>
+            <span className="text-orange-200 font-bold">Requests</span>
+          </div>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-gray-50/20">
-                <th className="px-6 py-5 text-xs font-black text-gray-400 uppercase tracking-widest">
+        <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl p-6 text-white shadow-xl shadow-blue-200/50 relative overflow-hidden group">
+          <div className="absolute right-0 top-0 w-32 h-32 bg-white opacity-10 rounded-full blur-2xl -mr-10 -mt-10 group-hover:opacity-20 transition-opacity duration-700"></div>
+          <div className="flex items-center justify-between mb-4 relative z-10">
+            <span className="text-blue-100 font-bold uppercase tracking-widest text-xs">
+              Employees Away
+            </span>
+            <Calendar className="text-blue-200" size={24} />
+          </div>
+          <div className="flex items-baseline gap-2 relative z-10">
+            <h2 className="text-5xl font-black">{stats.onLeave}</h2>
+            <span className="text-blue-200 font-bold">Today</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Tabs & Table Container */}
+      <div className="bg-white rounded-3xl border border-gray-100 shadow-sm flex flex-col flex-1 overflow-hidden min-h-[500px]">
+        {/* Modern Tabs */}
+        <div className="p-4 sm:p-6 border-b border-gray-100 bg-gray-50/50 overflow-x-auto no-scrollbar">
+          <div className="flex gap-3 min-w-max">
+            {["Pending", "Approved", "Rejected", "All History"].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`px-5 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${
+                  activeTab === tab
+                    ? "bg-white text-blue-600 shadow-sm ring-1 ring-gray-200 shadow-blue-100/50"
+                    : "text-gray-500 hover:text-gray-900 hover:bg-white/60"
+                }`}
+              >
+                {tab}
+                {tab === "Pending" && stats.pending > 0 && (
+                  <span
+                    className={`px-2 py-0.5 rounded-lg text-xs ${activeTab === tab ? "bg-blue-100 text-blue-700" : "bg-orange-100 text-orange-600"}`}
+                  >
+                    {stats.pending}
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Table Data Grid */}
+        <div className="overflow-x-auto flex-1 bg-white">
+          <table className="w-full text-left border-collapse whitespace-nowrap">
+            <thead className="sticky top-0 z-10 bg-white border-b border-gray-100">
+              <tr>
+                <th className="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest bg-gray-50/50">
                   Employee
                 </th>
-                <th className="px-6 py-5 text-xs font-black text-gray-400 uppercase tracking-widest">
+                <th className="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest bg-gray-50/50">
                   Leave Details
                 </th>
-                <th className="px-6 py-5 text-xs font-black text-gray-400 uppercase tracking-widest text-center">
+                <th className="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest bg-gray-50/50 text-center">
                   Duration
                 </th>
-                <th className="px-6 py-5 text-xs font-black text-gray-400 uppercase tracking-widest">
+                <th className="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest bg-gray-50/50">
                   Status
                 </th>
-                <th className="px-6 py-5 text-xs font-black text-gray-400 uppercase tracking-widest text-right">
+                <th className="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest bg-gray-50/50 text-right">
                   Actions
                 </th>
               </tr>
@@ -141,57 +169,72 @@ const LeaveApprovals = () => {
             <tbody className="divide-y divide-gray-50">
               {filteredRequests.length > 0 ? (
                 filteredRequests.map((req) => (
-                  <tr key={req._id} className="hover:bg-gray-50/50 transition-colors">
-                    <td className="px-6 py-5">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold border border-blue-200">
+                  <tr key={req._id} className="hover:bg-blue-50/30 transition-colors group">
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-4">
+                        <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-50 to-blue-50 flex items-center justify-center text-blue-600 font-black text-lg border border-indigo-100/50 shadow-sm group-hover:scale-105 transition-transform">
                           {req.employee?.name?.charAt(0)}
                         </div>
                         <div>
-                          <div className="font-bold text-gray-900">{req.employee?.name}</div>
-                          <div className="text-xs text-gray-400 font-bold uppercase">
+                          <div className="font-bold text-gray-900 text-[15px]">
+                            {req.employee?.name}
+                          </div>
+                          <div className="text-[11px] text-gray-400 font-bold uppercase tracking-widest mt-0.5">
                             {req.employee?.employeeId || "EMP-000"}
                           </div>
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-5">
-                      <div className="flex flex-col">
-                        <Badge status={req.leaveType} className="w-fit mb-1" />
-                        <div className="text-xs text-gray-500 font-medium line-clamp-1">
+                    <td className="px-6 py-4">
+                      <div className="flex flex-col gap-1.5">
+                        <div className="font-bold text-gray-800 text-sm">{req.leaveType}</div>
+                        <div
+                          className="text-xs text-gray-500 font-medium truncate max-w-[250px]"
+                          title={req.reason}
+                        >
                           {req.reason}
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-5 text-center">
-                      <div className="text-sm font-bold text-gray-900">{req.numberOfDays} Days</div>
-                      <div className="text-[10px] text-gray-400 font-bold">
-                        {new Date(req.fromDate).toLocaleDateString()}
+                    <td className="px-6 py-4 text-center">
+                      <div className="text-sm font-black text-blue-600 bg-blue-50 inline-block px-3 py-1 rounded-lg">
+                        {req.numberOfDays} Day{req.numberOfDays !== 1 ? "s" : ""}
+                      </div>
+                      <div className="text-[11px] text-gray-400 font-bold mt-1.5">
+                        {new Date(req.fromDate).toLocaleDateString(undefined, {
+                          month: "short",
+                          day: "numeric",
+                        })}{" "}
+                        -{" "}
+                        {new Date(req.toDate).toLocaleDateString(undefined, {
+                          month: "short",
+                          day: "numeric",
+                        })}
                       </div>
                     </td>
-                    <td className="px-6 py-5">
+                    <td className="px-6 py-4">
                       <Badge status={req.status} />
                     </td>
-                    <td className="px-6 py-5 text-right">
+                    <td className="px-6 py-4 text-right">
                       {req.status === "Pending" ? (
                         <div className="flex justify-end gap-2">
-                          <Button
-                            variant="secondary"
-                            className="p-2 bg-red-50 text-red-600 hover:bg-red-100 border border-red-100"
+                          <button
+                            className="p-2 bg-red-50 text-red-600 hover:bg-red-500 hover:text-white border border-red-100 rounded-xl transition-all shadow-sm"
                             onClick={() => handleAction(req._id, "reject")}
+                            title="Reject Request"
                           >
-                            <X size={18} />
-                          </Button>
-                          <Button
-                            variant="primary"
-                            className="p-2 shadow-blue-100"
+                            <X size={18} strokeWidth={2.5} />
+                          </button>
+                          <button
+                            className="p-2 bg-green-50 text-green-600 hover:bg-green-500 hover:text-white border border-green-100 rounded-xl transition-all shadow-sm"
                             onClick={() => handleAction(req._id, "approve")}
+                            title="Approve Request"
                           >
-                            <Check size={18} />
-                          </Button>
+                            <Check size={18} strokeWidth={2.5} />
+                          </button>
                         </div>
                       ) : (
-                        <span className="text-xs text-gray-400 font-bold uppercase tracking-wider italic">
+                        <span className="text-xs text-gray-400 font-bold uppercase tracking-widest bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100">
                           Processed
                         </span>
                       )}
@@ -200,11 +243,13 @@ const LeaveApprovals = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="5" className="px-6 py-20 text-center">
-                    <div className="flex flex-col items-center gap-3 text-gray-300">
-                      <SearchX size={48} strokeWidth={1} />
-                      <p className="font-black uppercase tracking-widest text-sm">
-                        No requests found
+                  <td colSpan="5" className="px-6 py-24 text-center">
+                    <div className="flex flex-col items-center gap-4 text-gray-300">
+                      <div className="bg-gray-50 p-4 rounded-full">
+                        <SearchX size={40} strokeWidth={1.5} className="text-gray-400" />
+                      </div>
+                      <p className="font-black uppercase tracking-widest text-sm text-gray-400">
+                        No requests found in this category
                       </p>
                     </div>
                   </td>

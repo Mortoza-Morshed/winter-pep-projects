@@ -54,105 +54,123 @@ const LeaveHistory = () => {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div className="space-y-6 h-full flex flex-col max-w-7xl mx-auto">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
         <div>
-          <h1 className="text-2xl font-black text-gray-900 mb-1">Leave History</h1>
-          <p className="text-gray-500 font-medium text-sm">
+          <h1 className="text-3xl font-black text-gray-900 mb-1 tracking-tight">Leave History</h1>
+          <p className="text-gray-500 font-medium text-lg">
             Review all your previous and pending leave requests.
           </p>
         </div>
         <div className="flex gap-2 w-full sm:w-auto">
           <Button
             variant="outline"
-            className="flex items-center gap-2 text-sm bg-white border-gray-200 text-gray-700 hover:bg-gray-50 flex-1 sm:flex-none"
+            className="flex items-center gap-2 text-sm bg-white border-gray-200 text-gray-700 hover:bg-gray-50 flex-1 sm:flex-none shadow-sm font-bold px-6 py-2.5 rounded-xl"
             onClick={() => exportToCSV(filteredLeaves, "my_leave_history")}
           >
-            <Download size={16} /> Export CSV
+            <Download size={18} /> Export Records
           </Button>
         </div>
       </div>
 
-      {/* Filters Bar */}
-      <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm flex flex-col md:flex-row gap-4 items-center">
-        <div className="relative flex-1 w-full">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-          <input
-            type="text"
-            placeholder="Search by reason or type..."
-            className="w-full bg-gray-50 border-gray-200 rounded-xl py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-        <div className="flex items-center gap-3 w-full md:w-auto">
-          <div className="flex items-center gap-2 text-sm text-gray-500 font-bold min-w-fit">
-            <Filter size={16} /> Filter:
+      <div className="bg-white rounded-3xl border border-gray-100 shadow-sm flex flex-col flex-1 overflow-hidden min-h-[500px]">
+        {/* Filters Bar */}
+        <div className="p-4 sm:p-6 border-b border-gray-100 flex flex-col sm:flex-row gap-4 items-center bg-gray-50/50">
+          <div className="relative flex-1 w-full sm:max-w-md">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+            <input
+              type="text"
+              placeholder="Search by reason or type..."
+              className="w-full bg-white border border-gray-200 rounded-xl py-2.5 pl-11 pr-4 text-sm focus:ring-2 focus:ring-blue-500 outline-none shadow-sm font-medium"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
-          <select
-            value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value)}
-            className="flex-1 md:w-40 bg-gray-50 border-gray-200 rounded-xl py-2 px-3 text-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none"
-          >
-            <option value="All">All Status</option>
-            <option value="Pending">Pending</option>
-            <option value="Approved">Approved</option>
-            <option value="Rejected">Rejected</option>
-          </select>
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <div className="flex items-center gap-2 text-sm text-gray-500 font-bold min-w-fit">
+              <Filter size={18} /> Filter:
+            </div>
+            <select
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+              className="flex-1 sm:w-48 bg-white border border-gray-200 rounded-xl py-2.5 px-4 text-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none shadow-sm cursor-pointer"
+            >
+              <option value="All">All Statuses</option>
+              <option value="Pending">Pending Review</option>
+              <option value="Approved">Approved</option>
+              <option value="Rejected">Declined</option>
+            </select>
+          </div>
         </div>
-      </div>
 
-      {/* Table */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-gray-50/50">
-                <th className="px-6 py-5 text-xs font-black text-gray-400 uppercase tracking-widest">
-                  Leave Type
+        {/* Table Container */}
+        <div className="overflow-x-auto flex-1 bg-white">
+          <table className="w-full text-left border-collapse whitespace-nowrap">
+            <thead className="sticky top-0 z-10 bg-white border-b border-gray-100">
+              <tr>
+                <th className="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest bg-gray-50/50">
+                  Leave Details
                 </th>
-                <th className="px-6 py-5 text-xs font-black text-gray-400 uppercase tracking-widest">
-                  Duration
+                <th className="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest bg-gray-50/50">
+                  Timeframe
                 </th>
-                <th className="px-6 py-5 text-xs font-black text-gray-400 uppercase tracking-widest">
+                <th className="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest bg-gray-50/50">
                   Reason
                 </th>
-                <th className="px-6 py-5 text-xs font-black text-gray-400 uppercase tracking-widest">
-                  Status
+                <th className="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest bg-gray-50/50">
+                  Current Status
                 </th>
-                <th className="px-6 py-5 text-xs font-black text-gray-400 uppercase tracking-widest">
-                  Applied On
+                <th className="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest bg-gray-50/50 text-right">
+                  Filed On
                 </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
               {filteredLeaves.length > 0 ? (
                 filteredLeaves.map((leave) => (
-                  <tr key={leave._id} className="hover:bg-gray-50/50 transition-colors">
-                    <td className="px-6 py-5">
-                      <div className="font-bold text-gray-900">{leave.leaveType}</div>
-                    </td>
-                    <td className="px-6 py-5">
-                      <div className="flex items-center gap-2 text-sm font-bold text-gray-700">
-                        <Calendar size={14} className="text-gray-400" />
-                        {new Date(leave.fromDate).toLocaleDateString()} -{" "}
-                        {new Date(leave.toDate).toLocaleDateString()}
-                      </div>
-                      <div className="text-xs text-blue-600 font-black mt-1 uppercase mt-0.5">
-                        {leave.numberOfDays} Days Total
+                  <tr key={leave._id} className="hover:bg-blue-50/30 transition-colors group">
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-50 to-blue-50 flex items-center justify-center border border-indigo-100/50">
+                          <Calendar className="text-indigo-500" size={20} />
+                        </div>
+                        <div className="font-bold text-gray-900 text-[15px]">{leave.leaveType}</div>
                       </div>
                     </td>
-                    <td className="px-6 py-5 max-w-xs">
-                      <p className="text-sm text-gray-600 font-medium line-clamp-2">
+                    <td className="px-6 py-4">
+                      <div className="text-sm font-bold text-gray-700">
+                        {new Date(leave.fromDate).toLocaleDateString(undefined, {
+                          month: "short",
+                          day: "numeric",
+                        })}{" "}
+                        -{" "}
+                        {new Date(leave.toDate).toLocaleDateString(undefined, {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
+                      </div>
+                      <div className="text-[11px] text-blue-600 font-black uppercase tracking-widest mt-1 bg-blue-50 inline-block px-2 py-0.5 rounded-md">
+                        {leave.numberOfDays} Day{leave.numberOfDays !== 1 ? "s" : ""}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 max-w-xs">
+                      <p
+                        className="text-sm text-gray-500 font-medium truncate"
+                        title={leave.reason}
+                      >
                         {leave.reason}
                       </p>
                     </td>
-                    <td className="px-6 py-5">
+                    <td className="px-6 py-4">
                       <Badge status={leave.status} />
                     </td>
-                    <td className="px-6 py-5">
+                    <td className="px-6 py-4 text-right">
                       <p className="text-sm font-bold text-gray-400">
-                        {new Date(leave.createdAt).toLocaleDateString()}
+                        {new Date(leave.createdAt).toLocaleDateString(undefined, {
+                          month: "long",
+                          day: "numeric",
+                        })}
                       </p>
                     </td>
                   </tr>
@@ -161,9 +179,9 @@ const LeaveHistory = () => {
                 <tr>
                   <td colSpan="5" className="px-6 py-20 text-center">
                     <div className="flex flex-col items-center gap-3 text-gray-300">
-                      <SearchX size={48} strokeWidth={1} />
-                      <p className="font-black uppercase tracking-widest text-sm">
-                        No results found
+                      <SearchX size={48} strokeWidth={1.5} className="text-gray-200" />
+                      <p className="font-black uppercase tracking-widest text-sm text-gray-400">
+                        No records match your criteria
                       </p>
                     </div>
                   </td>
@@ -173,28 +191,29 @@ const LeaveHistory = () => {
           </table>
         </div>
 
-        {/* Pagination */}
-        <div className="p-6 border-t border-gray-50 flex items-center justify-between">
-          <p className="text-sm text-gray-500 font-bold">
-            Showing 1 to {filteredLeaves.length} of {filteredLeaves.length} entries
+        {/* Pagination Footer */}
+        <div className="p-4 border-t border-gray-100 bg-gray-50/30 flex items-center justify-between">
+          <p className="text-xs text-gray-500 font-bold">
+            Showing <span className="text-gray-900">{filteredLeaves.length}</span> of{" "}
+            {leaves.length} entries
           </p>
           <div className="flex gap-2">
             <Button
               variant="outline"
-              className="p-2 border-gray-200 text-gray-400 hover:bg-gray-50 disabled:opacity-30"
+              className="p-2 bg-white border-gray-200 text-gray-400 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg shadow-sm"
               disabled
             >
               <ChevronLeft size={18} />
             </Button>
             <Button
               variant="outline"
-              className="px-4 py-2 border-blue-600 bg-blue-600 text-white text-sm font-bold shadow-sm shadow-blue-100"
+              className="px-4 py-2 border-blue-600 bg-blue-600 text-white text-sm font-bold shadow-sm shadow-blue-200 hover:-translate-y-0.5 transition-transform rounded-lg"
             >
               1
             </Button>
             <Button
               variant="outline"
-              className="p-2 border-gray-200 text-gray-400 hover:bg-gray-50 disabled:opacity-30"
+              className="p-2 bg-white border-gray-200 text-gray-400 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg shadow-sm"
               disabled
             >
               <ChevronRight size={18} />

@@ -134,133 +134,144 @@ const UserManagement = () => {
   }
 
   return (
-    <div className="space-y-8">
-      <div className="flex justify-between items-end">
+    <div className="space-y-6 h-full flex flex-col">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
         <div>
-          <h1 className="text-2xl font-black text-gray-900 mb-1">User Management</h1>
+          <h1 className="text-2xl font-black text-gray-900 mb-1">Company Directory</h1>
           <p className="text-gray-500 font-medium">
-            Manage employee accounts, roles, and system access.
+            Manage employee accounts, roles, and system access levels.
           </p>
         </div>
         <Button
           onClick={() => setIsAddUserModalOpen(true)}
-          className="flex items-center gap-2 px-6 shadow-blue-100"
+          className="flex items-center gap-2 px-6 shadow-blue-200 shadow-lg hover:-translate-y-0.5 transition-all w-full sm:w-auto justify-center"
         >
-          <UserPlus size={18} /> Add New User
+          <UserPlus size={18} /> Add New Member
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <StatCard title="Total Directory" value={stats.totalUsers} icon={Users} color="blue" />
-        <StatCard
-          title="Active Staff"
-          value={stats.activeEmployees}
-          icon={ShieldCheck}
-          color="green"
-        />
-        <StatCard
-          title="Pending Ops"
-          value={stats.pendingApprovals}
-          icon={ArrowUpDown}
-          color="orange"
-        />
-      </div>
-
-      {/* Table Section */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-        <div className="p-6 border-b border-gray-50 flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="relative w-full md:w-96">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+      {/* Main Data Grid Section */}
+      <div className="bg-white rounded-3xl border border-gray-100 shadow-sm flex flex-col flex-1 overflow-hidden min-h-[500px]">
+        {/* Toolbar Header */}
+        <div className="p-4 sm:p-6 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4 bg-gray-50/50">
+          <div className="relative w-full sm:max-w-md">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
             <input
               type="text"
-              placeholder="Find users by name, email or ID..."
-              className="w-full bg-gray-50 border-gray-200 rounded-xl py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+              placeholder="Search by name, email, or ID..."
+              className="w-full bg-white border border-gray-200 rounded-xl py-2.5 pl-11 pr-4 text-sm focus:ring-2 focus:ring-blue-500 outline-none shadow-sm transition-shadow font-medium"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <div className="flex gap-2 w-full md:w-auto">
+          <div className="flex gap-3 w-full sm:w-auto">
             <Button
               variant="outline"
-              className="p-2 border-gray-100 text-gray-400 hover:text-gray-600"
+              className="px-4 py-2.5 border-gray-200 text-gray-600 hover:text-gray-900 hover:bg-gray-50 bg-white"
             >
-              <Filter size={18} />
+              <Filter size={18} className="mr-2 inline" /> Filters
             </Button>
             <Button
               variant="outline"
-              className="p-2 border-gray-100 text-gray-400 hover:text-gray-600"
+              className="px-4 py-2.5 border-gray-200 text-gray-600 hover:text-gray-900 hover:bg-gray-50 bg-white"
               onClick={() => exportToCSV(filteredUsers, "system_users")}
             >
-              <Download size={18} />
+              <Download size={18} className="mr-2 inline" /> Export
             </Button>
           </div>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-gray-50/20">
-                <th className="px-6 py-5 text-xs font-black text-gray-400 uppercase tracking-widest">
-                  Employee Profile
+        {/* Table Container */}
+        <div className="overflow-x-auto flex-1 bg-white">
+          <table className="w-full text-left border-collapse whitespace-nowrap">
+            <thead className="sticky top-0 z-10 bg-white border-b border-gray-100">
+              <tr>
+                <th className="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest bg-gray-50/50">
+                  User Profile
                 </th>
-                <th className="px-6 py-5 text-xs font-black text-gray-400 uppercase tracking-widest">
+                <th className="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest bg-gray-50/50">
                   Contact Info
                 </th>
-                <th className="px-6 py-5 text-xs font-black text-gray-400 uppercase tracking-widest">
-                  Access Role
+                <th className="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest bg-gray-50/50">
+                  System Role
                 </th>
-                <th className="px-6 py-5 text-xs font-black text-gray-400 uppercase tracking-widest text-right">
+                <th className="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest text-right bg-gray-50/50">
                   Actions
                 </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
-              {filteredUsers.map((u) => (
-                <tr key={u._id} className="hover:bg-gray-50/50 transition-colors group">
-                  <td className="px-6 py-5">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold border border-blue-200">
-                        {u.name.charAt(0)}
-                      </div>
-                      <div>
-                        <div className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors uppercase tracking-tight">
-                          {u.name}
+              {filteredUsers.length > 0 ? (
+                filteredUsers.map((u) => (
+                  <tr key={u._id} className="hover:bg-blue-50/30 transition-colors group">
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-100 to-indigo-50 flex items-center justify-center text-blue-600 font-bold border border-blue-200 shadow-sm group-hover:scale-105 transition-transform">
+                          {u.name.charAt(0)}
                         </div>
-                        <div className="text-[10px] text-gray-400 font-bold tracking-widest uppercase">
-                          {u.employeeId || "NO-ID"}
+                        <div>
+                          <div className="font-bold text-gray-900 text-sm">{u.name}</div>
+                          <div className="text-[10px] text-gray-400 font-bold tracking-widest uppercase mt-0.5">
+                            {u.employeeId || "NO-ID"}
+                          </div>
                         </div>
                       </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="text-sm font-semibold text-gray-600 truncate max-w-[200px]">
+                        {u.email}
+                      </div>
+                      <div className="text-xs text-gray-400 font-medium">
+                        Department: {u.department || "N/A"}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <select
+                        value={u.role}
+                        onChange={(e) => handleRoleChange(u._id, e.target.value)}
+                        className={`border rounded-lg py-1.5 px-3 text-xs font-bold outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer transition-colors ${
+                          u.role === "Admin"
+                            ? "bg-purple-50 text-purple-700 border-purple-200"
+                            : u.role === "Manager"
+                              ? "bg-orange-50 text-orange-700 border-orange-200"
+                              : "bg-green-50 text-green-700 border-green-200"
+                        }`}
+                      >
+                        <option value="Employee">Employee</option>
+                        <option value="Manager">Manager</option>
+                        <option value="Admin">Admin</option>
+                      </select>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <button
+                        className="p-2 inline-flex items-center justify-center bg-white text-gray-400 hover:text-red-600 hover:bg-red-50 border border-gray-200 rounded-lg transition-colors shadow-sm"
+                        onClick={() => handleDelete(u._id)}
+                        title="Delete User"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4" className="px-6 py-16 text-center text-gray-500 font-medium">
+                    <div className="flex flex-col items-center justify-center space-y-3">
+                      <Search size={32} className="text-gray-300" />
+                      <p>No users found matching your search criteria.</p>
                     </div>
                   </td>
-                  <td className="px-6 py-5 text-sm font-medium text-gray-600">{u.email}</td>
-                  <td className="px-6 py-5">
-                    <select
-                      value={u.role}
-                      onChange={(e) => handleRoleChange(u._id, e.target.value)}
-                      className="bg-gray-50 border border-gray-200 rounded-lg py-1.5 px-3 text-xs font-bold text-gray-700 outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
-                    >
-                      <option value="Employee">Employee</option>
-                      <option value="Manager">Manager</option>
-                      <option value="Admin">Admin</option>
-                    </select>
-                  </td>
-                  <td className="px-6 py-5 text-right">
-                    <Button
-                      variant="secondary"
-                      className="p-2 bg-gray-50 text-gray-400 hover:text-red-500 border border-gray-100"
-                      onClick={() => handleDelete(u._id)}
-                    >
-                      <Trash2 size={16} />
-                    </Button>
-                  </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>
-        <div className="p-6 border-t border-gray-50">
-          <p className="text-xs text-center text-gray-400 font-bold uppercase tracking-widest">
-            End of Directory
+
+        {/* Footer */}
+        <div className="p-4 border-t border-gray-100 bg-gray-50/30 flex justify-between items-center">
+          <p className="text-xs text-gray-500 font-bold">
+            Showing <span className="text-gray-900">{filteredUsers.length}</span> of {users.length}{" "}
+            users
           </p>
         </div>
       </div>

@@ -182,7 +182,7 @@ const AdminDashboard = () => {
             <h2 className="text-lg font-black text-gray-900">Recent Company Requests</h2>
             <Link
               to="/approvals"
-              className="text-violet-600 text-sm font-bold flex items-center gap-1 hover:text-blue-700 transition-colors"
+              className="text-zinc-700 text-sm font-bold flex items-center gap-1 hover:text-blue-700 transition-colors"
             >
               View All <ArrowRight size={14} />
             </Link>
@@ -208,7 +208,7 @@ const AdminDashboard = () => {
                     <tr key={leave._id} className="hover:bg-gray-50/80 transition-colors group">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-100 to-indigo-50 flex items-center justify-center text-violet-600 font-bold border border-blue-200 shadow-sm group-hover:scale-105 transition-transform">
+                          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-100 to-indigo-50 flex items-center justify-center text-zinc-700 font-bold border border-blue-200 shadow-sm group-hover:scale-105 transition-transform">
                             {leave.employee?.name?.charAt(0)}
                           </div>
                           <div>

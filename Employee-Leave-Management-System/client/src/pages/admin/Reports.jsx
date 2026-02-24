@@ -5,6 +5,7 @@ import StatCard from "../../components/common/StatCard";
 import Button from "../../components/common/Button";
 import toast from "react-hot-toast";
 import { exportToCSV } from "../../utils/exportToCSV";
+import { useNotifications } from "../../context/NotificationsContext";
 import {
   Chart as ChartJS,
   ArcElement,
@@ -34,6 +35,7 @@ ChartJS.register(
 const Reports = () => {
   const [loading, setLoading] = useState(true);
   const [allLeaves, setAllLeaves] = useState([]);
+  const { addNotification } = useNotifications();
   const [metrics, setMetrics] = useState({
     totalDaysTaken: 0,
     mostCommonType: "N/A",
@@ -157,7 +159,14 @@ const Reports = () => {
           </p>
         </div>
         <Button
-          onClick={() => exportToCSV(allLeaves, "company_leave_report")}
+          onClick={() => {
+            exportToCSV(allLeaves, "company_leave_report");
+            addNotification({
+              title: "Report Exported",
+              message: `${allLeaves.length} leave records exported to company_leave_report.csv.`,
+              type: "info",
+            });
+          }}
           className="flex items-center gap-2 px-6 shadow-blue-200 shadow-lg hover:-translate-y-0.5 transition-all text-sm py-3"
         >
           <Download size={18} /> Export CSV Report

@@ -8,6 +8,7 @@ import {
   Users,
   FileBarChart,
   LayoutGrid,
+  Receipt,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 
@@ -33,14 +34,46 @@ const Sidebar = () => {
     ],
   };
 
+  const expenseItems = {
+    Employee: [
+      { icon: Receipt, label: "Submit Claim", path: "/reimbursements/submit" },
+      { icon: History, label: "My Claims", path: "/reimbursements/history" },
+    ],
+    Manager: [{ icon: Receipt, label: "Review Claims", path: "/reimbursements/review" }],
+    Admin: [{ icon: Receipt, label: "Review Claims", path: "/reimbursements/review" }],
+  };
+
   const currentMenu = menuItems[user?.role] || [];
+  const currentExpense = expenseItems[user?.role] || [];
+
+  const renderNavLink = (item) => (
+    <NavLink
+      key={item.path}
+      to={item.path}
+      end
+      className={({ isActive }) =>
+        `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300 ${
+          isActive
+            ? "bg-gradient-to-r from-slate-800 to-zinc-900 text-white shadow-lg shadow-zinc-300/40 translate-x-1"
+            : "text-gray-500 hover:bg-zinc-100/60 hover:text-zinc-900"
+        }`
+      }
+    >
+      {({ isActive }) => (
+        <>
+          <item.icon size={20} strokeWidth={isActive ? 2.5 : 2} />
+          {item.label}
+        </>
+      )}
+    </NavLink>
+  );
 
   return (
     <aside className="w-64 glass border-r border-white/40 flex flex-col h-full fixed inset-y-0 left-0 z-20 m-4 rounded-2xl shadow-xl hidden lg:flex">
       {/* Logo */}
       <div className="p-6 pb-2">
         <div className="flex items-center gap-3">
-          <div className="bg-gradient-to-br from-violet-600 to-purple-700 p-2 rounded-xl text-white shadow-lg shadow-violet-200">
+          <div className="bg-gradient-to-br from-slate-800 to-zinc-900 p-2 rounded-xl text-white shadow-lg shadow-zinc-300">
             <LayoutGrid size={22} strokeWidth={2.5} />
           </div>
           <span className="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 tracking-tight">
@@ -50,31 +83,20 @@ const Sidebar = () => {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-4 py-8 space-y-1.5 overflow-y-auto no-scrollbar">
-        <div className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-4 mb-4">
+      <nav className="flex-1 px-4 py-6 space-y-1.5 overflow-y-auto no-scrollbar">
+        <div className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-4 mb-3">
           Main Menu
         </div>
-        {currentMenu.map((item) => (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            end
-            className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300 ${
-                isActive
-                  ? "bg-gradient-to-r from-violet-600 to-purple-700 text-white shadow-lg shadow-violet-200/50 translate-x-1"
-                  : "text-gray-500 hover:bg-violet-50/60 hover:text-violet-900"
-              }`
-            }
-          >
-            {({ isActive }) => (
-              <>
-                <item.icon size={20} strokeWidth={isActive ? 2.5 : 2} />
-                {item.label}
-              </>
-            )}
-          </NavLink>
-        ))}
+        {currentMenu.map(renderNavLink)}
+
+        {currentExpense.length > 0 && (
+          <>
+            <div className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-4 pt-5 pb-2">
+              Expenses
+            </div>
+            {currentExpense.map(renderNavLink)}
+          </>
+        )}
       </nav>
     </aside>
   );

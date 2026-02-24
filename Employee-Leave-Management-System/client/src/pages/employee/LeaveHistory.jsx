@@ -13,12 +13,14 @@ import Badge from "../../components/common/Badge";
 import Button from "../../components/common/Button";
 import toast from "react-hot-toast";
 import { exportToCSV } from "../../utils/exportToCSV";
+import { useNotifications } from "../../context/NotificationsContext";
 
 const LeaveHistory = () => {
   const [leaves, setLeaves] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("All");
+  const { addNotification } = useNotifications();
 
   useEffect(() => {
     const fetchHistory = async () => {
@@ -66,7 +68,14 @@ const LeaveHistory = () => {
           <Button
             variant="outline"
             className="flex items-center gap-2 text-sm bg-white border-gray-200 text-gray-700 hover:bg-gray-50 flex-1 sm:flex-none shadow-sm font-bold px-6 py-2.5 rounded-xl"
-            onClick={() => exportToCSV(filteredLeaves, "my_leave_history")}
+            onClick={() => {
+              exportToCSV(filteredLeaves, "my_leave_history");
+              addNotification({
+                title: "History Exported",
+                message: `${filteredLeaves.length} leave record${filteredLeaves.length !== 1 ? "s" : ""} exported to my_leave_history.csv.`,
+                type: "info",
+              });
+            }}
           >
             <Download size={18} /> Export Records
           </Button>
@@ -150,7 +159,7 @@ const LeaveHistory = () => {
                           year: "numeric",
                         })}
                       </div>
-                      <div className="text-[11px] text-violet-600 font-black uppercase tracking-widest mt-1 bg-blue-50 inline-block px-2 py-0.5 rounded-md">
+                      <div className="text-[11px] text-zinc-700 font-black uppercase tracking-widest mt-1 bg-blue-50 inline-block px-2 py-0.5 rounded-md">
                         {leave.numberOfDays} Day{leave.numberOfDays !== 1 ? "s" : ""}
                       </div>
                     </td>

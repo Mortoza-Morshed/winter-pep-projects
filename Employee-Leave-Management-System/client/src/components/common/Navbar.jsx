@@ -74,15 +74,27 @@ const Navbar = () => {
     .toUpperCase();
 
   return (
-    <header className="h-20 fixed top-0 left-0 right-0 lg:left-[252px] z-10 px-4 lg:px-5 py-4 pointer-events-none">
+    <header className="h-24 fixed top-0 left-0 right-0 lg:left-[252px] z-10 px-4 lg:px-5 py-3 pointer-events-none">
       <div className="h-full glass rounded-2xl flex items-center justify-between px-5 sm:px-7 pointer-events-auto">
-        {/* Breadcrumb */}
-        <div className="flex items-center font-semibold truncate min-w-0">
-          <span className="text-gray-400 uppercase tracking-widest text-xs hidden sm:inline flex-shrink-0">
-            Workspace
-          </span>
-          <ChevronRight size={14} className="mx-2 text-gray-300 hidden sm:inline flex-shrink-0" />
-          <span className="text-gray-900 font-bold tracking-tight text-lg truncate">
+        <div className="flex flex-col justify-center min-w-0">
+          <div className="flex items-center gap-2 mb-0.5">
+            <span
+              className={`text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md hidden sm:inline ${
+                user?.role === "Admin"
+                  ? "bg-zinc-100 text-zinc-500"
+                  : user?.role === "Manager"
+                    ? "bg-amber-50 text-amber-600"
+                    : "bg-gray-100 text-gray-500"
+              }`}
+            >
+              {user?.role === "Admin"
+                ? "Admin Console"
+                : user?.role === "Manager"
+                  ? "Manager Hub"
+                  : "My Portal"}
+            </span>
+          </div>
+          <span className="text-gray-900 font-bold tracking-tight text-xl truncate leading-tight">
             {getBreadcrumb()}
           </span>
         </div>
@@ -92,7 +104,7 @@ const Navbar = () => {
           {user?.role === "Employee" && (
             <Link
               to="/apply-leave"
-              className="hidden sm:flex bg-gradient-to-r from-violet-600 to-purple-700 text-white px-5 py-2 rounded-xl text-sm font-bold shadow-lg shadow-violet-200/60 hover:shadow-xl hover:-translate-y-0.5 transition-all active:scale-95 items-center gap-1.5"
+              className="hidden sm:flex bg-gradient-to-r from-slate-800 to-zinc-900 text-white px-5 py-2 rounded-xl text-sm font-bold shadow-lg shadow-zinc-300/40 hover:shadow-xl hover:-translate-y-0.5 transition-all active:scale-95 items-center gap-1.5"
             >
               + Apply Leave
             </Link>
@@ -108,7 +120,7 @@ const Navbar = () => {
                 setShowProfile(false);
                 if (!showNotifications) markAllRead();
               }}
-              className="relative p-2.5 bg-white rounded-xl border border-gray-100 shadow-sm text-gray-500 hover:text-violet-600 hover:bg-blue-50 hover:border-blue-100 transition-all"
+              className="relative p-2.5 bg-white rounded-xl border border-gray-100 shadow-sm text-gray-500 hover:text-zinc-800 hover:bg-zinc-50 hover:border-zinc-200 transition-all"
             >
               <Bell size={19} />
               {unreadCount > 0 && (
@@ -200,7 +212,7 @@ const Navbar = () => {
               }`}
             >
               <div className="relative">
-                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-violet-500 via-purple-600 to-fuchsia-600 flex items-center justify-center text-white font-black text-[13px] shadow-md shadow-violet-300/50 select-none">
+                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-slate-700 to-zinc-800 flex items-center justify-center text-white font-black text-[13px] shadow-sm select-none">
                   {initials ?? <User size={14} />}
                 </div>
                 <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 rounded-full border-2 border-white shadow-sm" />
@@ -210,7 +222,7 @@ const Navbar = () => {
             {showProfile && (
               <div className="absolute right-0 mt-3 w-60 bg-white rounded-2xl shadow-2xl shadow-gray-300/40 border border-gray-100 z-50 overflow-hidden animate-fade-in">
                 {/* Header with gradient */}
-                <div className="px-5 py-4 bg-gradient-to-br from-violet-600 to-purple-800 relative overflow-hidden">
+                <div className="px-5 py-4 bg-gradient-to-br from-slate-800 to-zinc-900 relative overflow-hidden">
                   <div
                     className="absolute inset-0 opacity-20"
                     style={{
@@ -219,7 +231,7 @@ const Navbar = () => {
                     }}
                   />
                   <div className="flex items-center gap-3 relative z-10">
-                    <div className="w-11 h-11 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-white font-black text-base border border-white/30 shadow-inner select-none">
+                    <div className="w-11 h-11 rounded-xl bg-white/15 backdrop-blur-sm flex items-center justify-center text-white font-black text-base border border-white/20 shadow-inner select-none">
                       {initials ?? <User size={16} />}
                     </div>
                     <div>

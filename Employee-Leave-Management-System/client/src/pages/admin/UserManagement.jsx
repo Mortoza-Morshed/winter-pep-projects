@@ -7,7 +7,6 @@ import {
   ShieldCheck,
   ArrowUpDown,
   Download,
-  Filter,
   X,
 } from "lucide-react";
 import api from "../../services/api";
@@ -180,13 +179,14 @@ const UserManagement = () => {
             <Button
               variant="outline"
               className="px-4 py-2.5 border-gray-200 text-gray-600 hover:text-gray-900 hover:bg-gray-50 bg-white"
-            >
-              <Filter size={18} className="mr-2 inline" /> Filters
-            </Button>
-            <Button
-              variant="outline"
-              className="px-4 py-2.5 border-gray-200 text-gray-600 hover:text-gray-900 hover:bg-gray-50 bg-white"
-              onClick={() => exportToCSV(filteredUsers, "system_users")}
+              onClick={() => {
+                exportToCSV(filteredUsers, "system_users");
+                addNotification({
+                  title: "Data Exported",
+                  message: `${filteredUsers.length} user records exported to system_users.csv.`,
+                  type: "info",
+                });
+              }}
             >
               <Download size={18} className="mr-2 inline" /> Export
             </Button>
@@ -218,7 +218,7 @@ const UserManagement = () => {
                   <tr key={u._id} className="hover:bg-blue-50/30 transition-colors group">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-100 to-indigo-50 flex items-center justify-center text-violet-600 font-bold border border-blue-200 shadow-sm group-hover:scale-105 transition-transform">
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-100 to-indigo-50 flex items-center justify-center text-zinc-700 font-bold border border-blue-200 shadow-sm group-hover:scale-105 transition-transform">
                           {u.name.charAt(0)}
                         </div>
                         <div>

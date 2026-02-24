@@ -11,6 +11,9 @@ import LeaveApprovals from "../pages/manager/LeaveApprovals";
 import UserManagement from "../pages/admin/UserManagement";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import Reports from "../pages/admin/Reports";
+import ReimbursementForm from "../pages/employee/ReimbursementForm";
+import ReimbursementHistory from "../pages/employee/ReimbursementHistory";
+import ReimbursementApprovals from "../pages/manager/ReimbursementApprovals";
 
 const LayoutRoutes = () => (
   <Layout>
@@ -71,6 +74,32 @@ const LayoutRoutes = () => (
         element={
           <ProtectedRoute role="Admin">
             <Reports />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Reimbursements */}
+      <Route
+        path="reimbursements/submit"
+        element={
+          <ProtectedRoute role="Employee">
+            <ReimbursementForm />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="reimbursements/history"
+        element={
+          <ProtectedRoute role="Employee">
+            <ReimbursementHistory />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="reimbursements/review"
+        element={
+          <ProtectedRoute>
+            <ReimbursementApprovals />
           </ProtectedRoute>
         }
       />

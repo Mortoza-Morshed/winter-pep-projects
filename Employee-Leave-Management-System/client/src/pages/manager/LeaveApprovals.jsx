@@ -128,7 +128,7 @@ const LeaveApprovals = () => {
                 onClick={() => setActiveTab(tab)}
                 className={`px-5 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${
                   activeTab === tab
-                    ? "bg-white text-violet-600 shadow-sm ring-1 ring-gray-200 shadow-blue-100/50"
+                    ? "bg-white text-zinc-700 shadow-sm ring-1 ring-gray-200 shadow-blue-100/50"
                     : "text-gray-500 hover:text-gray-900 hover:bg-white/60"
                 }`}
               >
@@ -173,7 +173,7 @@ const LeaveApprovals = () => {
                   <tr key={req._id} className="hover:bg-blue-50/30 transition-colors group">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-4">
-                        <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-50 to-blue-50 flex items-center justify-center text-violet-600 font-black text-lg border border-indigo-100/50 shadow-sm group-hover:scale-105 transition-transform">
+                        <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-50 to-blue-50 flex items-center justify-center text-zinc-700 font-black text-lg border border-indigo-100/50 shadow-sm group-hover:scale-105 transition-transform">
                           {req.employee?.name?.charAt(0)}
                         </div>
                         <div>
@@ -198,7 +198,7 @@ const LeaveApprovals = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4 text-center">
-                      <div className="text-sm font-black text-violet-600 bg-blue-50 inline-block px-3 py-1 rounded-lg">
+                      <div className="text-sm font-black text-zinc-700 bg-blue-50 inline-block px-3 py-1 rounded-lg">
                         {req.numberOfDays} Day{req.numberOfDays !== 1 ? "s" : ""}
                       </div>
                       <div className="text-[11px] text-gray-400 font-bold mt-1.5">

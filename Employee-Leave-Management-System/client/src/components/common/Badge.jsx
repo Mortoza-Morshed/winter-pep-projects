@@ -5,7 +5,7 @@ const Badge = ({ children, status = "Pending", className = "" }) => {
     Approved: "bg-green-100 text-green-700 border-green-200",
     Pending: "bg-orange-100 text-orange-700 border-orange-200",
     Rejected: "bg-red-100 text-red-700 border-red-200",
-    "Annual Leave": "bg-violet-50 text-violet-600 border-violet-100",
+    "Annual Leave": "bg-zinc-100 text-zinc-700 border-zinc-200",
     "Sick Leave": "bg-pink-50 text-pink-600 border-pink-100",
     "Personal Leave": "bg-gray-100 text-gray-600 border-gray-200",
     "Casual Leave": "bg-purple-50 text-purple-600 border-purple-100",

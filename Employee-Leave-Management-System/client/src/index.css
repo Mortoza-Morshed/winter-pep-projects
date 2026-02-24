@@ -4,13 +4,13 @@
 @layer base {
   body {
     @apply antialiased;
-    background-color: #f5f3ff;
+    background-color: #f4f4f5;
     font-family:
       "Outfit",
       system-ui,
       -apple-system,
       sans-serif;
-    color: #1a1523;
+    color: #18181b;
   }
 }
 
@@ -23,24 +23,25 @@
   @apply bg-transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(139, 92, 246, 0.25);
+  background: rgba(113, 113, 122, 0.3);
   border-radius: 99px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(139, 92, 246, 0.45);
+  background: rgba(113, 113, 122, 0.55);
 }
 
-/* Glassmorphism — violet-tinted */
+/* Glassmorphism — neutral warm white */
 .glass {
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.78);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(139, 92, 246, 0.12);
-  box-shadow: 0 8px 32px 0 rgba(109, 40, 217, 0.06);
+  border: 1px solid rgba(228, 228, 231, 0.9);
+  box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.06);
 }
 
 .glass-dark {
-  @apply bg-slate-900/80 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.2)];
+  @apply bg-slate-900/80 backdrop-blur-xl border border-white/10;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
 }
 
 /* Hide scrollbar utility */

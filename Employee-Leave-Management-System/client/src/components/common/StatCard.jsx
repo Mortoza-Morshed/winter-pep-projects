@@ -3,10 +3,12 @@ import { ArrowUpRight, ArrowDownRight } from "lucide-react";
 
 const StatCard = ({ title, value, icon: Icon, trend, color = "blue" }) => {
   const colorStyles = {
-    blue: "bg-blue-50 text-blue-600",
-    green: "bg-green-50 text-green-600",
-    orange: "bg-orange-50 text-orange-600",
-    red: "bg-red-50 text-red-600",
+    blue: "bg-violet-50 text-violet-600",
+    violet: "bg-violet-50 text-violet-600",
+    purple: "bg-purple-50 text-purple-600",
+    green: "bg-emerald-50 text-emerald-600",
+    orange: "bg-amber-50 text-amber-600",
+    red: "bg-rose-50 text-rose-600",
   };
 
   return (

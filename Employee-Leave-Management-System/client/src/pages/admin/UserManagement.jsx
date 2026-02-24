@@ -15,6 +15,7 @@ import Button from "../../components/common/Button";
 import StatCard from "../../components/common/StatCard";
 import toast from "react-hot-toast";
 import { exportToCSV } from "../../utils/exportToCSV";
+import { useNotifications } from "../../context/NotificationsContext";
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
@@ -25,6 +26,7 @@ const UserManagement = () => {
     activeEmployees: 0,
     pendingApprovals: 0,
   });
+  const { addNotification } = useNotifications();
 
   // Add User Modal State
   const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
@@ -59,11 +61,17 @@ const UserManagement = () => {
   }, []);
 
   const handleRoleChange = async (id, newRole) => {
+    const target = users.find((u) => u._id === id);
     try {
       const response = await api.put(`/users/${id}/role`, { role: newRole });
       if (response.data.success) {
         toast.success("User role updated");
         setUsers(users.map((u) => (u._id === id ? { ...u, role: newRole } : u)));
+        addNotification({
+          title: "Role Updated",
+          message: `${target?.name ?? "User"}'s role has been changed to ${newRole}.`,
+          type: "info",
+        });
       }
     } catch (error) {
       toast.error("Failed to update role");
@@ -71,15 +79,19 @@ const UserManagement = () => {
   };
 
   const handleDelete = async (id) => {
+    const target = users.find((u) => u._id === id);
     if (!window.confirm("Are you sure you want to delete this user?")) return;
-
     try {
       const response = await api.delete(`/users/${id}`);
       if (response.data.success) {
         toast.success("User deleted");
         setUsers(users.filter((u) => u._id !== id));
-        // Update stats
         setStats((prev) => ({ ...prev, totalUsers: Math.max(0, prev.totalUsers - 1) }));
+        addNotification({
+          title: "User Removed",
+          message: `${target?.name ?? "A user"} (${target?.employeeId ?? ""}) has been removed from the system.`,
+          type: "reject",
+        });
       }
     } catch (error) {
       toast.error("Failed to delete user");
@@ -206,7 +218,7 @@ const UserManagement = () => {
                   <tr key={u._id} className="hover:bg-blue-50/30 transition-colors group">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-100 to-indigo-50 flex items-center justify-center text-blue-600 font-bold border border-blue-200 shadow-sm group-hover:scale-105 transition-transform">
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-100 to-indigo-50 flex items-center justify-center text-violet-600 font-bold border border-blue-200 shadow-sm group-hover:scale-105 transition-transform">
                           {u.name.charAt(0)}
                         </div>
                         <div>

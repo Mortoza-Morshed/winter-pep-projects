@@ -133,7 +133,7 @@ const LoginPage = () => {
                   type="checkbox"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded-md cursor-pointer transition-colors"
+                  className="h-5 w-5 text-violet-600 focus:ring-blue-500 border-gray-300 rounded-md cursor-pointer transition-colors"
                 />
                 <label
                   htmlFor="remember-me"
@@ -145,7 +145,7 @@ const LoginPage = () => {
               <div className="text-sm">
                 <a
                   href="#"
-                  className="font-bold text-blue-600 hover:text-blue-800 transition-colors"
+                  className="font-bold text-violet-600 hover:text-blue-800 transition-colors"
                 >
                   Forgot password?
                 </a>
@@ -165,7 +165,7 @@ const LoginPage = () => {
                 New to the system?{" "}
                 <Link
                   to="/register"
-                  className="font-black text-blue-600 hover:text-blue-800 transition-colors border-b-2 border-transparent hover:border-blue-600 pb-0.5"
+                  className="font-black text-violet-600 hover:text-blue-800 transition-colors border-b-2 border-transparent hover:border-blue-600 pb-0.5"
                 >
                   Create an account
                 </Link>

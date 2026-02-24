@@ -126,7 +126,7 @@ const EmployeeDashboard = () => {
             <h2 className="text-xl font-black text-gray-900">Recent Applications</h2>
             <a
               href="/leave-history"
-              className="text-blue-600 text-sm font-bold flex items-center gap-1 hover:text-blue-800 transition-colors"
+              className="text-violet-600 text-sm font-bold flex items-center gap-1 hover:text-blue-800 transition-colors"
             >
               View Full History <ArrowRight size={14} />
             </a>
@@ -167,7 +167,7 @@ const EmployeeDashboard = () => {
                           to {new Date(leave.toDate).toLocaleDateString()}
                         </div>
                       </td>
-                      <td className="px-6 py-5 text-center font-black text-blue-600 bg-blue-50/30">
+                      <td className="px-6 py-5 text-center font-black text-violet-600 bg-blue-50/30">
                         {leave.numberOfDays}d
                       </td>
                       <td className="px-6 py-5">

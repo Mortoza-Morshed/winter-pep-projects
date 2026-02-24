@@ -150,7 +150,7 @@ const LeaveHistory = () => {
                           year: "numeric",
                         })}
                       </div>
-                      <div className="text-[11px] text-blue-600 font-black uppercase tracking-widest mt-1 bg-blue-50 inline-block px-2 py-0.5 rounded-md">
+                      <div className="text-[11px] text-violet-600 font-black uppercase tracking-widest mt-1 bg-blue-50 inline-block px-2 py-0.5 rounded-md">
                         {leave.numberOfDays} Day{leave.numberOfDays !== 1 ? "s" : ""}
                       </div>
                     </td>

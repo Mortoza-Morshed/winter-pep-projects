@@ -1,8 +1,8 @@
-# Recharge (formerly ELMS)
+# Recharge 
 
 A modern, full-stack application for managing employee leave requests and expense reimbursements. Featuring a beautiful, responsive React frontend and a Node.js/Express/MongoDB backend.
 
-## 🚀 Key Features
+## Key Features
 
 - **Role-Based Access Control (RBAC)**: Distinct views for Employees, Managers, and Admins.
 - **Leave Management**: Apply for leaves, view your history, and see your accurate available balance (defaults to 30 days). Managers can approve or reject leaves.
@@ -12,12 +12,12 @@ A modern, full-stack application for managing employee leave requests and expens
 - **Modern UI**: Built with Tailwind CSS v4 and Lucide icons for a clean, professional, and dark-themed aesthetics.
 - **Authentication**: Secure JWT-based auth with auto-login and session persistence.
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 - **Frontend**: React (Vite), React Router v6, Tailwind CSS v4, Context API, Axios, Lucide React, React Hot Toast.
 - **Backend**: Node.js, Express, MongoDB (Mongoose), JWT, Bcryptjs.
 
-## 🏁 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -55,7 +55,7 @@ npm install
 npm run dev
 ```
 
-## 🔐 Test Credentials (Seeded)
+## Test Credentials (Seeded)
 
 Running `node seed.js` in the server directory provides the following pre-populated test accounts:
 
@@ -66,12 +66,10 @@ Running `node seed.js` in the server directory provides the following pre-popula
 | **Employee** | John Employee | emp1@company.com    | Emp@123     |
 | **Employee** | Alice Smith   | emp2@company.com    | Emp@123     |
 
-## 📂 Project Structure
+## Project Structure
 
 - `/server`: API logic, models, controllers, and middleware.
 - `/client`: React source code, context, components, and pages.
-- `/brain`: System documentation and implementation artifacts.
 
 ---
 
-Developed as part of the Winter PEP project suite.

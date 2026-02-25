@@ -79,26 +79,26 @@ const RegisterPage = () => {
         {/* Subtle background glow for mobile */}
         <div className="lg:hidden absolute top-0 inset-x-0 h-64 bg-gradient-to-b from-blue-100 to-transparent opacity-50 pointer-events-none"></div>
 
-        <div className="w-full max-w-[460px] relative z-10 py-8">
-          <div className="mb-10 lg:hidden flex justify-center">
+        <div className="w-full max-w-[460px] relative z-10 py-4">
+          <div className="mb-6 lg:hidden flex justify-center">
             <div className="flex items-center gap-3">
               <div className="bg-gradient-to-br from-blue-600 to-indigo-700 p-2.5 rounded-xl shadow-lg shadow-blue-200">
-                <LayoutGrid className="text-white" size={28} strokeWidth={2.5} />
+                <LayoutGrid className="text-white" size={24} strokeWidth={2.5} />
               </div>
-              <span className="text-2xl font-black text-gray-900 tracking-tight">ELMS Portal</span>
+              <span className="text-2xl font-black text-gray-900 tracking-tight">Recharge</span>
             </div>
           </div>
 
-          <div className="mb-10 text-center lg:text-left">
-            <h2 className="text-4xl font-black text-gray-900 mb-3 tracking-tight">
+          <div className="mb-6 text-center lg:text-left">
+            <h2 className="text-3xl font-black text-gray-900 mb-2 tracking-tight">
               Create Account
             </h2>
-            <p className="text-gray-500 font-medium text-lg">
+            <p className="text-gray-500 font-medium text-[15px]">
               Get started with your company account.
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <Input
               label="Full Name"
               id="name"
@@ -120,7 +120,7 @@ const RegisterPage = () => {
               required
             />
 
-            <div className="grid grid-cols-2 gap-5">
+            <div className="grid grid-cols-2 gap-4">
               <Input
                 label="Department"
                 id="department"
@@ -161,7 +161,7 @@ const RegisterPage = () => {
                   id="role"
                   value={formData.role}
                   onChange={handleChange}
-                  className="block w-full rounded-2xl border border-gray-200 bg-gray-50/50 px-5 py-4 text-[15px] font-bold text-gray-800 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 focus:bg-white transition-all outline-none appearance-none cursor-pointer shadow-sm"
+                  className="block w-full rounded-2xl border border-gray-200 bg-gray-50/50 px-5 py-3.5 text-[15px] font-bold text-gray-800 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 focus:bg-white transition-all outline-none appearance-none cursor-pointer shadow-sm"
                 >
                   <option value="Employee">Employee</option>
                   <option value="Manager">Manager</option>
@@ -181,14 +181,14 @@ const RegisterPage = () => {
 
             <Button
               type="submit"
-              className="w-full py-4 text-lg font-black rounded-2xl shadow-xl shadow-blue-200 hover:-translate-y-0.5 transition-all mt-6"
+              className="w-full py-3.5 text-lg font-black rounded-2xl shadow-lg shadow-blue-200 hover:-translate-y-0.5 transition-all mt-4"
               disabled={isLoading}
             >
               {isLoading ? "Creating Account..." : "Register Now"}
             </Button>
 
-            <div className="text-center mt-8">
-              <p className="text-base text-gray-600 font-medium">
+            <div className="text-center mt-5">
+              <p className="text-sm text-gray-600 font-medium">
                 Already have an account?{" "}
                 <Link
                   to="/login"

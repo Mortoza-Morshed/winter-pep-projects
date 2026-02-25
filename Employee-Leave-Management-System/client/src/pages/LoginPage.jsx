@@ -9,7 +9,6 @@ import toast from "react-hot-toast";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
   const { login, isLoading } = useAuth();
   const navigate = useNavigate();
 
@@ -123,33 +122,6 @@ const LoginPage = () => {
                 icon={Lock}
                 required
               />
-            </div>
-
-            <div className="flex items-center justify-between pt-2">
-              <div className="flex items-center">
-                <input
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                  className="h-5 w-5 text-zinc-700 focus:ring-blue-500 border-gray-300 rounded-md cursor-pointer transition-colors"
-                />
-                <label
-                  htmlFor="remember-me"
-                  className="ml-3 block text-sm font-bold text-gray-700 cursor-pointer"
-                >
-                  Remember me
-                </label>
-              </div>
-              <div className="text-sm">
-                <a
-                  href="#"
-                  className="font-bold text-zinc-700 hover:text-blue-800 transition-colors"
-                >
-                  Forgot password?
-                </a>
-              </div>
             </div>
 
             <Button

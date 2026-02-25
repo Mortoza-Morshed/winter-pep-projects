@@ -120,16 +120,24 @@ const getLeaveStats = async (req, res) => {
       employee: req.user._id,
       status: "Pending",
     });
-    const approvedLeaves = await LeaveRequest.countDocuments({
+    const approvedLeavesCount = await LeaveRequest.countDocuments({
       employee: req.user._id,
       status: "Approved",
     });
 
+    const approvedLeaves = await LeaveRequest.find({
+      employee: req.user._id,
+      status: "Approved",
+    });
+
+    const usedDays = approvedLeaves.reduce((sum, leave) => sum + (leave.numberOfDays || 0), 0);
+    const availableBalance = Math.max(0, user.leaveBalance - usedDays);
+
     res.json({
       success: true,
-      leaveBalance: user.leaveBalance,
+      leaveBalance: availableBalance, // Send actual remaining balance
       pendingLeaves,
-      approvedLeaves,
+      approvedLeaves: approvedLeavesCount,
     });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });

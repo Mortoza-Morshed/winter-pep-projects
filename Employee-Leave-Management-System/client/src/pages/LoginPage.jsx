@@ -21,7 +21,7 @@ const LoginPage = () => {
       toast.success("Successfully logged in!");
       // Redirect based on role
       if (result.role === "Admin") navigate("/admin");
-      else if (result.role === "Manager") navigate("/approvals");
+      else if (result.role === "Manager") navigate("/manager-dashboard");
       else navigate("/dashboard");
     } else {
       toast.error(result.message);
@@ -50,7 +50,7 @@ const LoginPage = () => {
             <div className="bg-white/10 p-2.5 rounded-xl backdrop-blur-md border border-white/20 shadow-lg">
               <LayoutGrid className="text-white" size={32} strokeWidth={2.5} />
             </div>
-            <span className="text-2xl font-black tracking-widest uppercase">ELMS Portal</span>
+            <span className="text-2xl font-black tracking-widest uppercase">Recharge</span>
           </div>
 
           <h1 className="text-6xl font-black mb-6 leading-[1.1] tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white to-blue-100">

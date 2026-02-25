@@ -102,17 +102,17 @@ const LeaveApprovals = () => {
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl p-6 text-white shadow-xl shadow-blue-200/50 relative overflow-hidden group">
+        <div className="bg-gradient-to-br from-slate-700 to-zinc-800 rounded-3xl p-6 text-white shadow-xl shadow-zinc-300/40 relative overflow-hidden group">
           <div className="absolute right-0 top-0 w-32 h-32 bg-white opacity-10 rounded-full blur-2xl -mr-10 -mt-10 group-hover:opacity-20 transition-opacity duration-700"></div>
           <div className="flex items-center justify-between mb-4 relative z-10">
-            <span className="text-blue-100 font-bold uppercase tracking-widest text-xs">
+            <span className="text-zinc-300 font-bold uppercase tracking-widest text-xs">
               Employees Away
             </span>
-            <Calendar className="text-blue-200" size={24} />
+            <Calendar className="text-zinc-400" size={24} />
           </div>
           <div className="flex items-baseline gap-2 relative z-10">
             <h2 className="text-5xl font-black">{stats.onLeave}</h2>
-            <span className="text-blue-200 font-bold">Today</span>
+            <span className="text-zinc-400 font-bold">Today</span>
           </div>
         </div>
       </div>

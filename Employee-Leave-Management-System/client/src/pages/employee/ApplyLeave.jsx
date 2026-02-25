@@ -14,7 +14,22 @@ const ApplyLeave = () => {
     reason: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [balance, setBalance] = useState(0);
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    const fetchBalance = async () => {
+      try {
+        const res = await api.get("/leaves/stats");
+        if (res.data.success) {
+          setBalance(res.data.leaveBalance);
+        }
+      } catch (err) {
+        console.error("Failed to fetch balance", err);
+      }
+    };
+    fetchBalance();
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -258,9 +273,11 @@ const ApplyLeave = () => {
 
             <div className="mt-8 p-4 bg-white/5 rounded-2xl backdrop-blur-sm border border-white/5 relative z-10">
               <p className="text-sm text-gray-300 leading-relaxed font-medium">
-                Your current balance is <span className="text-white font-bold">18 days</span>. This
-                request will reduce your balance to{" "}
-                <span className="text-blue-300 font-bold">{Math.max(0, 18 - daysCount)} days</span>{" "}
+                Your current balance is <span className="text-white font-bold">{balance} days</span>
+                . This request will reduce your balance to{" "}
+                <span className="text-blue-300 font-bold">
+                  {Math.max(0, balance - daysCount)} days
+                </span>{" "}
                 upon manager approval.
               </p>
             </div>

@@ -1,5 +1,5 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React, { useEffect } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
   CalendarPlus,
@@ -9,11 +9,30 @@ import {
   FileBarChart,
   LayoutGrid,
   Receipt,
+  X,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen, onClose }) => {
   const { user } = useAuth();
+  const location = useLocation();
+
+  // Close sidebar on route change (mobile)
+  useEffect(() => {
+    onClose();
+  }, [location.pathname]);
+
+  // Lock body scroll when drawer is open on mobile
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
 
   const menuItems = {
     Employee: [
@@ -22,9 +41,8 @@ const Sidebar = () => {
       { icon: History, label: "Leave History", path: "/leave-history" },
     ],
     Manager: [
-      { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
+      { icon: LayoutDashboard, label: "Dashboard", path: "/manager-dashboard" },
       { icon: CheckSquare, label: "Leave Approvals", path: "/approvals" },
-      { icon: History, label: "Team History", path: "/team-history" },
     ],
     Admin: [
       { icon: LayoutDashboard, label: "Dashboard", path: "/admin" },
@@ -68,18 +86,26 @@ const Sidebar = () => {
     </NavLink>
   );
 
-  return (
-    <aside className="w-64 glass border-r border-white/40 flex flex-col h-full fixed inset-y-0 left-0 z-20 m-4 rounded-2xl shadow-xl hidden lg:flex">
+  const sidebarContent = (
+    <aside className="w-64 glass border-r border-white/40 flex flex-col h-full">
       {/* Logo */}
-      <div className="p-6 pb-2">
+      <div className="p-6 pb-2 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="bg-gradient-to-br from-slate-800 to-zinc-900 p-2 rounded-xl text-white shadow-lg shadow-zinc-300">
             <LayoutGrid size={22} strokeWidth={2.5} />
           </div>
           <span className="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 tracking-tight">
-            LeaveFlow
+            Recharge
           </span>
         </div>
+        {/* Close button — only visible on mobile */}
+        <button
+          onClick={onClose}
+          className="lg:hidden p-1.5 rounded-lg text-gray-400 hover:text-gray-800 hover:bg-gray-100 transition-colors"
+          aria-label="Close menu"
+        >
+          <X size={20} />
+        </button>
       </div>
 
       {/* Navigation */}
@@ -99,6 +125,32 @@ const Sidebar = () => {
         )}
       </nav>
     </aside>
+  );
+
+  return (
+    <>
+      {/* ── Desktop: pinned sidebar ── */}
+      <div className="hidden lg:block fixed inset-y-0 left-0 z-20 m-4 rounded-2xl shadow-xl w-[236px]">
+        {sidebarContent}
+      </div>
+
+      {/* ── Mobile: backdrop + slide-in drawer ── */}
+      {/* Backdrop */}
+      <div
+        onClick={onClose}
+        className={`lg:hidden fixed inset-0 z-30 bg-black/40 backdrop-blur-sm transition-opacity duration-300 ${
+          isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        }`}
+      />
+      {/* Drawer */}
+      <div
+        className={`lg:hidden fixed inset-y-0 left-0 z-40 w-72 shadow-2xl transition-transform duration-300 ease-in-out ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        {sidebarContent}
+      </div>
+    </>
   );
 };
 

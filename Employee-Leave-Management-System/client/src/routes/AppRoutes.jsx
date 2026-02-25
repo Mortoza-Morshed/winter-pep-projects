@@ -14,6 +14,7 @@ import Reports from "../pages/admin/Reports";
 import ReimbursementForm from "../pages/employee/ReimbursementForm";
 import ReimbursementHistory from "../pages/employee/ReimbursementHistory";
 import ReimbursementApprovals from "../pages/manager/ReimbursementApprovals";
+import ManagerDashboard from "../pages/manager/ManagerDashboard";
 
 const LayoutRoutes = () => (
   <Layout>
@@ -39,6 +40,15 @@ const LayoutRoutes = () => (
         element={
           <ProtectedRoute role="Employee">
             <LeaveHistory />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="manager-dashboard"
+        element={
+          <ProtectedRoute role="Manager">
+            <ManagerDashboard />
           </ProtectedRoute>
         }
       />
@@ -103,9 +113,6 @@ const LayoutRoutes = () => (
           </ProtectedRoute>
         }
       />
-
-      {/* Fallback for unfinished features linked in Sidebar */}
-      <Route path="team-history" element={<Navigate to="/approvals" />} />
     </Routes>
   </Layout>
 );

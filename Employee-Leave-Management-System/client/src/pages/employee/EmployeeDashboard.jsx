@@ -58,19 +58,11 @@ const EmployeeDashboard = () => {
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
       {/* Page Heading */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
-        <div>
-          <h1 className="text-3xl font-black text-gray-900 mb-1 tracking-tight">Welcome Back!</h1>
-          <p className="text-gray-500 font-medium text-lg">
-            Here's what's happening with your leave schedule.
-          </p>
-        </div>
-        <a
-          href="/apply-leave"
-          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg shadow-blue-200 hover:shadow-blue-300 hover:-translate-y-0.5 flex items-center gap-2"
-        >
-          <Calendar size={18} /> Apply for Time Off
-        </a>
+      <div>
+        <h1 className="text-3xl font-black text-gray-900 mb-1 tracking-tight">Welcome Back!</h1>
+        <p className="text-gray-500 font-medium text-lg">
+          Here's what's happening with your leave schedule.
+        </p>
       </div>
 
       {/* Stats Grid */}
@@ -192,29 +184,6 @@ const EmployeeDashboard = () => {
 
         {/* Side Content: Holidays & info */}
         <div className="space-y-6">
-          {/* Holiday Card */}
-          <div className="bg-gradient-to-br from-indigo-900 to-gray-900 rounded-3xl p-8 text-white shadow-xl shadow-gray-200 relative overflow-hidden group">
-            <div className="absolute right-0 top-0 w-48 h-48 bg-white opacity-5 rounded-full blur-3xl -mr-10 -mt-10 group-hover:opacity-10 transition-opacity duration-700"></div>
-            <div className="flex items-center gap-4 mb-6 relative z-10">
-              <div className="bg-white/10 p-3 rounded-2xl backdrop-blur-md">
-                <Palmtree size={28} className="text-blue-300" />
-              </div>
-              <h3 className="text-xl font-black">Next Holiday</h3>
-            </div>
-            <div className="mb-6 relative z-10">
-              <span className="bg-blue-500/20 text-blue-200 text-xs font-bold px-3 py-1.5 rounded-lg uppercase tracking-widest border border-blue-400/20">
-                March 26, 2026
-              </span>
-              <p className="text-3xl font-black mt-4 leading-none">Independence Day</p>
-              <p className="text-gray-400 text-sm mt-3 leading-relaxed font-medium">
-                Celebrate our nation's freedom. A day of pride and reflection across the country.
-              </p>
-            </div>
-            <button className="w-full bg-white/10 hover:bg-white/20 text-white font-bold py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2 backdrop-blur-md relative z-10 border border-white/5">
-              View Office Calendar <ExternalLink size={16} />
-            </button>
-          </div>
-
           {/* Quick Tips */}
           <div className="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm flex items-start gap-4">
             <div className="bg-orange-50 p-3 rounded-2xl text-orange-500 shrink-0 mt-1">

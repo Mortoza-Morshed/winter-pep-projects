@@ -96,7 +96,7 @@ const approveClaim = async (req, res) => {
     claim.status = "Approved";
     claim.reviewedBy = req.user._id;
     claim.reviewedAt = Date.now();
-    claim.comments = req.body.comments || "";
+    claim.comments = req.body?.comments || "";
     await claim.save();
 
     res.json({ success: true, claim });
@@ -118,7 +118,7 @@ const rejectClaim = async (req, res) => {
     claim.status = "Rejected";
     claim.reviewedBy = req.user._id;
     claim.reviewedAt = Date.now();
-    claim.comments = req.body.comments || "";
+    claim.comments = req.body?.comments || "";
     await claim.save();
 
     res.json({ success: true, claim });

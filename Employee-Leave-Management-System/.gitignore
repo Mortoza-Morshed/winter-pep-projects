@@ -41,3 +41,7 @@ coverage/
 .turbo/
 out/
 build/
+
+server_debug.log
+test.bat
+

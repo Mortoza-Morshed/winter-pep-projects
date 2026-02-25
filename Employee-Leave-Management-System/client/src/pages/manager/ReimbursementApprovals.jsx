@@ -51,7 +51,7 @@ const ReimbursementApprovals = () => {
   const handleAction = async (id, action, claim) => {
     setActionLoading(id + action);
     try {
-      await api.put(`/reimbursements/${id}/${action}`);
+      await api.put(`/reimbursements/${id}/${action}`, {});
       const label = action === "approve" ? "Approved" : "Rejected";
       toast.success(`Claim ${label.toLowerCase()} successfully!`);
       addNotification({

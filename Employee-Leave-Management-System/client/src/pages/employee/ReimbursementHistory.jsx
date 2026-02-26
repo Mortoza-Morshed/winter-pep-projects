@@ -63,7 +63,11 @@ const ReimbursementHistory = () => {
     const matchSearch =
       c.title.toLowerCase().includes(search.toLowerCase()) ||
       c.category.toLowerCase().includes(search.toLowerCase());
-    const matchStatus = filterStatus === "All" || c.status === filterStatus;
+    const matchStatus =
+      filterStatus === "All" ||
+      (filterStatus === "In Review" &&
+        (c.status === "Pending" || c.status === "Manager Approved")) ||
+      c.status === filterStatus;
     return matchSearch && matchStatus;
   });
 
@@ -76,7 +80,7 @@ const ReimbursementHistory = () => {
       bg: "bg-zinc-100",
     },
     {
-      label: "Pending",
+      label: "In Review",
       value: stats.pending,
       icon: Clock,
       color: "text-amber-600",
@@ -157,7 +161,7 @@ const ReimbursementHistory = () => {
             />
           </div>
           <div className="flex gap-3 w-full sm:w-auto">
-            {["All", "Pending", "Manager Approved", "Approved", "Rejected"].map((s) => (
+            {["All", "In Review", "Approved", "Rejected"].map((s) => (
               <button
                 key={s}
                 onClick={() => setFilterStatus(s)}

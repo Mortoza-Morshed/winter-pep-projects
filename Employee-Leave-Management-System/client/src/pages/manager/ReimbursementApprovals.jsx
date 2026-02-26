@@ -278,7 +278,9 @@ const ReimbursementApprovals = () => {
                       })}
                     </td>
                     <td className="px-6 py-4">
-                      <Badge status={c.status} />
+                      <Badge
+                        status={c.status === "Manager Approved" ? "Awaiting Admin" : c.status}
+                      />
                     </td>
                     <td className="px-6 py-4 text-right">
                       {(role === "Manager" && c.status === "Pending") ||

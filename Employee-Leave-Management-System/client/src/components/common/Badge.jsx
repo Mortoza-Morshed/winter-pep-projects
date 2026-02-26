@@ -3,7 +3,7 @@ import React from "react";
 const Badge = ({ children, status = "Pending", className = "" }) => {
   const statusStyles = {
     Approved: "bg-green-100 text-green-700 border-green-200",
-    "Manager Approved": "bg-blue-100 text-blue-700 border-blue-200",
+    "Awaiting Admin": "bg-blue-100 text-blue-700 border-blue-200",
     Pending: "bg-orange-100 text-orange-700 border-orange-200",
     Rejected: "bg-red-100 text-red-700 border-red-200",
     "Annual Leave": "bg-zinc-100 text-zinc-700 border-zinc-200",

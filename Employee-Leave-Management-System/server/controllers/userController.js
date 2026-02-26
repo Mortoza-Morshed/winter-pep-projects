@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const LeaveRequest = require("../models/LeaveRequest");
 
 // @desc    Get all users
 // @route   GET /api/users
@@ -62,8 +63,13 @@ const getUserStats = async (req, res) => {
   try {
     const totalUsers = await User.countDocuments();
     const activeEmployees = await User.countDocuments({ role: "Employee" });
-    // Simulating pending approvals for stats (in reality this would check LeaveRequest status)
-    const pendingApprovals = 0; // Will be updated by leave controller logic later if needed
+
+    // Count actual pending Manager-submitted leaves awaiting Admin approval
+    const managerIds = await User.find({ role: "Manager" }).distinct("_id");
+    const pendingApprovals = await LeaveRequest.countDocuments({
+      employee: { $in: managerIds },
+      status: "Pending",
+    });
 
     res.json({
       success: true,

@@ -111,8 +111,16 @@ const getStats = async (req, res) => {
 // @access  Private/Manager or Admin
 const approveClaim = async (req, res) => {
   try {
-    const claim = await Reimbursement.findById(req.params.id);
+    const claim = await Reimbursement.findById(req.params.id).populate("employee", "role");
     if (!claim) return res.status(404).json({ success: false, message: "Claim not found" });
+
+    // Managers cannot approve another Manager's reimbursement
+    if (req.user.role === "Manager" && claim.employee?.role === "Manager") {
+      return res.status(403).json({
+        success: false,
+        message: "Managers cannot approve other Managers' reimbursement claims",
+      });
+    }
 
     if (req.user.role === "Manager") {
       if (claim.status !== "Pending")
@@ -156,8 +164,16 @@ const approveClaim = async (req, res) => {
 // @access  Private/Manager or Admin
 const rejectClaim = async (req, res) => {
   try {
-    const claim = await Reimbursement.findById(req.params.id);
+    const claim = await Reimbursement.findById(req.params.id).populate("employee", "role");
     if (!claim) return res.status(404).json({ success: false, message: "Claim not found" });
+
+    // Managers cannot reject another Manager's reimbursement
+    if (req.user.role === "Manager" && claim.employee?.role === "Manager") {
+      return res.status(403).json({
+        success: false,
+        message: "Managers cannot reject other Managers' reimbursement claims",
+      });
+    }
 
     // Managers can reject Pending. Admins can reject Manager Approved.
     if (req.user.role === "Manager" && claim.status !== "Pending") {

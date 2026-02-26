@@ -43,7 +43,10 @@ const AdminDashboard = () => {
 
         if (leavesRes.data.success) {
           leaveRequests = leavesRes.data.leaves;
-          pendingCount = leaveRequests.filter((l) => l.status === "Pending").length;
+          // Admins only approve Manager-submitted leaves
+          pendingCount = leaveRequests.filter(
+            (l) => l.status === "Pending" && l.employee?.role === "Manager",
+          ).length;
           setRecentLeaves(leaveRequests.slice(0, 5)); // Get top 5 most recent
 
           // Generate Chart Data

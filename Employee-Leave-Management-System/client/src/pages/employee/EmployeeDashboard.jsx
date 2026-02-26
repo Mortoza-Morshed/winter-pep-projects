@@ -15,7 +15,7 @@ import toast from "react-hot-toast";
 
 const EmployeeDashboard = () => {
   const [stats, setStats] = useState({
-    leaveBalance: 18,
+    leaveBalance: 0,
     pendingLeaves: 0,
     approvedLeaves: 0,
   });

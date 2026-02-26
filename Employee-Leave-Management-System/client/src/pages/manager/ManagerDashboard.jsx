@@ -37,14 +37,17 @@ const ManagerDashboard = () => {
     fetchData();
   }, []);
 
-  const pendingLeaves = leaves.filter((l) => l.status === "Pending");
-  const approvedLeaves = leaves.filter((l) => l.status === "Approved");
+  // Only count/show Employee-submitted leaves in the Manager's approval stats
+  const employeeLeaves = leaves.filter((l) => l.employee?.role === "Employee");
+
+  const pendingLeaves = employeeLeaves.filter((l) => l.status === "Pending");
+  const approvedLeaves = employeeLeaves.filter((l) => l.status === "Approved");
   const pendingClaims = claims.filter((c) => c.status === "Pending");
   const totalClaimAmount = claims
     .filter((c) => c.status === "Approved")
     .reduce((s, c) => s + c.amount, 0);
 
-  const recentLeaves = [...leaves].slice(0, 5);
+  const recentLeaves = [...employeeLeaves].slice(0, 5);
   const recentClaims = [...claims].slice(0, 5);
 
   const statCards = [

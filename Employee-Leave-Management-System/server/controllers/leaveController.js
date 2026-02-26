@@ -82,13 +82,8 @@ const approveLeave = async (req, res) => {
         .json({ success: false, message: "Admins can only approve Manager leave requests" });
     }
 
-    // Deduct leave balance from user
-    const user = await User.findById(leave.employee._id);
-    if (user) {
-      user.leaveBalance -= leave.numberOfDays;
-      await user.save();
-    }
-
+    // NOTE: Leave balance is NOT deducted here directly.
+    // It is calculated dynamically in getLeaveStats by summing approved days.
     leave.status = "Approved";
     leave.reviewedBy = req.user._id;
     leave.reviewedAt = Date.now();

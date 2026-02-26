@@ -15,6 +15,7 @@ import ReimbursementForm from "../pages/employee/ReimbursementForm";
 import ReimbursementHistory from "../pages/employee/ReimbursementHistory";
 import ReimbursementApprovals from "../pages/manager/ReimbursementApprovals";
 import ManagerDashboard from "../pages/manager/ManagerDashboard";
+import AdminLeaveApprovals from "../pages/admin/AdminLeaveApprovals";
 
 const LayoutRoutes = () => (
   <Layout>
@@ -56,7 +57,7 @@ const LayoutRoutes = () => (
       <Route
         path="approvals"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute role="Manager">
             <LeaveApprovals />
           </ProtectedRoute>
         }
@@ -84,6 +85,48 @@ const LayoutRoutes = () => (
         element={
           <ProtectedRoute role="Admin">
             <Reports />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="admin/leave-approvals"
+        element={
+          <ProtectedRoute role="Admin">
+            <AdminLeaveApprovals />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Manager self-service leave & reimbursements */}
+      <Route
+        path="manager/apply-leave"
+        element={
+          <ProtectedRoute role="Manager">
+            <ApplyLeave />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="manager/leave-history"
+        element={
+          <ProtectedRoute role="Manager">
+            <LeaveHistory />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="manager/reimbursements/submit"
+        element={
+          <ProtectedRoute role="Manager">
+            <ReimbursementForm />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="manager/reimbursements/history"
+        element={
+          <ProtectedRoute role="Manager">
+            <ReimbursementHistory />
           </ProtectedRoute>
         }
       />

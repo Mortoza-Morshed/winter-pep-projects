@@ -15,6 +15,7 @@ import Button from "../../components/common/Button";
 import { useNavigate } from "react-router-dom";
 import { exportToCSV } from "../../utils/exportToCSV";
 import { useNotifications } from "../../context/NotificationsContext";
+import { useAuth } from "../../context/AuthContext";
 
 const categoryColors = {
   Travel: "bg-blue-50 text-blue-700 border-blue-100",
@@ -27,6 +28,7 @@ const categoryColors = {
 const ReimbursementHistory = () => {
   const navigate = useNavigate();
   const { addNotification } = useNotifications();
+  const { role } = useAuth();
   const [claims, setClaims] = useState([]);
   const [stats, setStats] = useState({
     total: 0,
@@ -114,7 +116,11 @@ const ReimbursementHistory = () => {
           <p className="text-gray-500 font-medium text-lg">Track your submitted expense claims.</p>
         </div>
         <Button
-          onClick={() => navigate("/reimbursements/submit")}
+          onClick={() =>
+            navigate(
+              role === "Manager" ? "/manager/reimbursements/submit" : "/reimbursements/submit",
+            )
+          }
           className="flex items-center gap-2 px-6 py-3 self-start"
         >
           <PlusCircle size={18} /> Submit New Claim
@@ -151,7 +157,7 @@ const ReimbursementHistory = () => {
             />
           </div>
           <div className="flex gap-3 w-full sm:w-auto">
-            {["All", "Pending", "Approved", "Rejected"].map((s) => (
+            {["All", "Pending", "Manager Approved", "Approved", "Rejected"].map((s) => (
               <button
                 key={s}
                 onClick={() => setFilterStatus(s)}

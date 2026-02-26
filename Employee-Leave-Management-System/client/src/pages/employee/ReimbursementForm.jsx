@@ -5,12 +5,14 @@ import Button from "../../components/common/Button";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useNotifications } from "../../context/NotificationsContext";
+import { useAuth } from "../../context/AuthContext";
 
 const CATEGORIES = ["Travel", "Meals", "Equipment", "Medical", "Other"];
 
 const ReimbursementForm = () => {
   const navigate = useNavigate();
   const { addNotification } = useNotifications();
+  const { role } = useAuth();
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     title: "",
@@ -41,7 +43,9 @@ const ReimbursementForm = () => {
           message: `Your ${form.category} claim of $${parseFloat(form.amount).toFixed(2)} has been submitted for review.`,
           type: "info",
         });
-        navigate("/reimbursements/history");
+        navigate(
+          role === "Manager" ? "/manager/reimbursements/history" : "/reimbursements/history",
+        );
       }
     } catch (err) {
       toast.error(err.response?.data?.message || "Submission failed.");
@@ -180,7 +184,13 @@ const ReimbursementForm = () => {
               </Button>
               <button
                 type="button"
-                onClick={() => navigate("/reimbursements/history")}
+                onClick={() =>
+                  navigate(
+                    role === "Manager"
+                      ? "/manager/reimbursements/history"
+                      : "/reimbursements/history",
+                  )
+                }
                 className="px-6 py-3 rounded-xl text-sm font-bold text-gray-500 bg-gray-100 hover:bg-gray-200 transition-colors"
               >
                 View My Claims

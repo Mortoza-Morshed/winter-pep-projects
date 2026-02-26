@@ -137,7 +137,9 @@ const seedData = async () => {
         amount: 320.0,
         date: new Date("2024-03-10"),
         description: "Catered lunch for the marketing team after Q1 wrap up.",
-        status: "Pending",
+        status: "Manager Approved",
+        reviewedBy: mgr._id,
+        reviewedAt: new Date("2024-03-11"),
       },
       {
         employee: emp1._id,

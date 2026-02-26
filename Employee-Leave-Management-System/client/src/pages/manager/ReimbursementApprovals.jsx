@@ -14,6 +14,7 @@ import Badge from "../../components/common/Badge";
 import toast from "react-hot-toast";
 import { exportToCSV } from "../../utils/exportToCSV";
 import { useNotifications } from "../../context/NotificationsContext";
+import { useAuth } from "../../context/AuthContext";
 
 const categoryColors = {
   Travel: "bg-blue-50 text-blue-700 border-blue-100",
@@ -27,6 +28,7 @@ const TABS = ["Pending", "Approved", "Rejected", "All"];
 
 const ReimbursementApprovals = () => {
   const { addNotification } = useNotifications();
+  const { role } = useAuth();
   const [claims, setClaims] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("Pending");
@@ -68,7 +70,14 @@ const ReimbursementApprovals = () => {
   };
 
   const filtered = claims.filter((c) => {
-    const matchTab = activeTab === "All" || c.status === activeTab;
+    let matchTab = false;
+    if (activeTab === "All") {
+      matchTab = true;
+    } else if (activeTab === "Pending") {
+      matchTab = role === "Admin" ? c.status === "Manager Approved" : c.status === "Pending";
+    } else {
+      matchTab = c.status === activeTab;
+    }
     const matchSearch =
       c.employee?.name?.toLowerCase().includes(search.toLowerCase()) ||
       c.title?.toLowerCase().includes(search.toLowerCase()) ||
@@ -76,7 +85,9 @@ const ReimbursementApprovals = () => {
     return matchTab && matchSearch;
   });
 
-  const totalPending = claims.filter((c) => c.status === "Pending").length;
+  const totalPending = claims.filter((c) =>
+    role === "Admin" ? c.status === "Manager Approved" : c.status === "Pending",
+  ).length;
   const totalApproved = claims.filter((c) => c.status === "Approved").length;
   const totalAmount = claims
     .filter((c) => c.status === "Approved")
@@ -162,7 +173,9 @@ const ReimbursementApprovals = () => {
               >
                 {tab}
                 {tab === "Pending" && totalPending > 0 && (
-                  <span className="ml-1.5 bg-amber-500 text-white text-[10px] font-black px-1.5 py-0.5 rounded-full">
+                  <span
+                    className={`ml-1.5 text-white text-[10px] font-black px-1.5 py-0.5 rounded-full ${role === "Admin" ? "bg-blue-500" : "bg-amber-500"}`}
+                  >
                     {totalPending}
                   </span>
                 )}
@@ -268,7 +281,8 @@ const ReimbursementApprovals = () => {
                       <Badge status={c.status} />
                     </td>
                     <td className="px-6 py-4 text-right">
-                      {c.status === "Pending" ? (
+                      {(role === "Manager" && c.status === "Pending") ||
+                      (role === "Admin" && c.status === "Manager Approved") ? (
                         <div className="flex gap-2 justify-end">
                           <button
                             onClick={() => handleAction(c._id, "approve", c)}

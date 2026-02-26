@@ -13,6 +13,9 @@ const submitClaim = async (req, res) => {
   }
 
   try {
+    // If a Manager submits, auto-advance to 'Manager Approved' so Admin can review directly
+    const initialStatus = req.user.role === "Manager" ? "Manager Approved" : "Pending";
+
     const claim = await Reimbursement.create({
       employee: req.user._id,
       title,
@@ -20,6 +23,7 @@ const submitClaim = async (req, res) => {
       amount,
       date,
       description,
+      status: initialStatus,
     });
     res.status(201).json({ success: true, claim });
   } catch (error) {
@@ -44,7 +48,26 @@ const getMyClaims = async (req, res) => {
 // @access  Private/Manager or Admin
 const getAllClaims = async (req, res) => {
   try {
-    const claims = await Reimbursement.find({})
+    let filter = {};
+    if (req.user.role === "Manager") {
+      // Managers see Pending claims from Employees only (not their own Manager-submitted claims)
+      filter = {
+        status: { $in: ["Pending", "Approved", "Rejected"] },
+        employeeRole: { $ne: "Manager" },
+      };
+      // Use a lookup-style approach: find claims where employee is NOT a Manager
+      const User = require("../models/User");
+      const employees = await User.find({ role: "Employee" }).select("_id");
+      const employeeIds = employees.map((u) => u._id);
+      filter = {
+        status: { $in: ["Pending", "Manager Approved", "Approved", "Rejected"] },
+        employee: { $in: employeeIds },
+      };
+    } else if (req.user.role === "Admin") {
+      filter = { status: { $in: ["Manager Approved", "Approved", "Rejected"] } };
+    }
+
+    const claims = await Reimbursement.find(filter)
       .populate("employee", "name email role employeeId department")
       .populate("reviewedBy", "name")
       .sort({ createdAt: -1 });
@@ -62,7 +85,7 @@ const getStats = async (req, res) => {
     const total = await Reimbursement.countDocuments({ employee: req.user._id });
     const pending = await Reimbursement.countDocuments({
       employee: req.user._id,
-      status: "Pending",
+      status: { $in: ["Pending", "Manager Approved"] },
     });
     const approved = await Reimbursement.countDocuments({
       employee: req.user._id,
@@ -90,13 +113,36 @@ const approveClaim = async (req, res) => {
   try {
     const claim = await Reimbursement.findById(req.params.id);
     if (!claim) return res.status(404).json({ success: false, message: "Claim not found" });
-    if (claim.status !== "Pending")
-      return res.status(400).json({ success: false, message: "Claim already processed" });
 
-    claim.status = "Approved";
-    claim.reviewedBy = req.user._id;
-    claim.reviewedAt = Date.now();
-    claim.comments = req.body?.comments || "";
+    if (req.user.role === "Manager") {
+      if (claim.status !== "Pending")
+        return res.status(400).json({
+          success: false,
+          message: "Claim already processed by Manager or invalid status",
+        });
+
+      claim.status = "Manager Approved";
+      claim.reviewedBy = req.user._id;
+      claim.reviewedAt = Date.now();
+      claim.comments = req.body?.comments || "";
+    } else if (req.user.role === "Admin") {
+      if (claim.status !== "Manager Approved")
+        return res
+          .status(400)
+          .json({ success: false, message: "Claim must be Manager Approved first" });
+
+      claim.status = "Approved";
+      claim.reviewedBy = req.user._id;
+      claim.reviewedAt = Date.now();
+      if (req.body?.comments) {
+        claim.comments = claim.comments
+          ? `${claim.comments} | Admin: ${req.body.comments}`
+          : req.body.comments;
+      }
+    } else {
+      return res.status(403).json({ success: false, message: "Unauthorized role for approval" });
+    }
+
     await claim.save();
 
     res.json({ success: true, claim });
@@ -112,13 +158,29 @@ const rejectClaim = async (req, res) => {
   try {
     const claim = await Reimbursement.findById(req.params.id);
     if (!claim) return res.status(404).json({ success: false, message: "Claim not found" });
-    if (claim.status !== "Pending")
-      return res.status(400).json({ success: false, message: "Claim already processed" });
+
+    // Managers can reject Pending. Admins can reject Manager Approved.
+    if (req.user.role === "Manager" && claim.status !== "Pending") {
+      return res
+        .status(400)
+        .json({ success: false, message: "Manager can only reject Pending claims" });
+    }
+    if (req.user.role === "Admin" && claim.status !== "Manager Approved") {
+      return res
+        .status(400)
+        .json({ success: false, message: "Admin can only reject Manager Approved claims" });
+    }
 
     claim.status = "Rejected";
     claim.reviewedBy = req.user._id;
     claim.reviewedAt = Date.now();
-    claim.comments = req.body?.comments || "";
+    if (req.body?.comments && req.user.role === "Admin") {
+      claim.comments = claim.comments
+        ? `${claim.comments} | Admin: ${req.body.comments}`
+        : req.body.comments;
+    } else {
+      claim.comments = req.body?.comments || "";
+    }
     await claim.save();
 
     res.json({ success: true, claim });

@@ -60,7 +60,7 @@ const getAllLeaves = async (req, res) => {
 // @access  Private/Manager or Admin
 const approveLeave = async (req, res) => {
   try {
-    const leave = await LeaveRequest.findById(req.params.id);
+    const leave = await LeaveRequest.findById(req.params.id).populate("employee", "role");
 
     if (!leave) {
       return res.status(404).json({ success: false, message: "Leave request not found" });
@@ -70,8 +70,20 @@ const approveLeave = async (req, res) => {
       return res.status(400).json({ success: false, message: "Leave already processed" });
     }
 
+    // Role-based approval guard: Managers approve Employee leaves, Admins approve Manager leaves
+    if (req.user.role === "Manager" && leave.employee.role !== "Employee") {
+      return res
+        .status(403)
+        .json({ success: false, message: "Managers can only approve Employee leave requests" });
+    }
+    if (req.user.role === "Admin" && leave.employee.role !== "Manager") {
+      return res
+        .status(403)
+        .json({ success: false, message: "Admins can only approve Manager leave requests" });
+    }
+
     // Deduct leave balance from user
-    const user = await User.findById(leave.employee);
+    const user = await User.findById(leave.employee._id);
     if (user) {
       user.leaveBalance -= leave.numberOfDays;
       await user.save();
@@ -93,10 +105,22 @@ const approveLeave = async (req, res) => {
 // @access  Private/Manager or Admin
 const rejectLeave = async (req, res) => {
   try {
-    const leave = await LeaveRequest.findById(req.params.id);
+    const leave = await LeaveRequest.findById(req.params.id).populate("employee", "role");
 
     if (!leave) {
       return res.status(404).json({ success: false, message: "Leave request not found" });
+    }
+
+    // Role-based rejection guard
+    if (req.user.role === "Manager" && leave.employee.role !== "Employee") {
+      return res
+        .status(403)
+        .json({ success: false, message: "Managers can only reject Employee leave requests" });
+    }
+    if (req.user.role === "Admin" && leave.employee.role !== "Manager") {
+      return res
+        .status(403)
+        .json({ success: false, message: "Admins can only reject Manager leave requests" });
     }
 
     leave.status = "Rejected";

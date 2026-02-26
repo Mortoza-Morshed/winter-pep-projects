@@ -17,7 +17,7 @@ const reimbursementSchema = new mongoose.Schema({
   description: { type: String },
   status: {
     type: String,
-    enum: ["Pending", "Approved", "Rejected"],
+    enum: ["Pending", "Manager Approved", "Approved", "Rejected"],
     default: "Pending",
   },
   reviewedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },

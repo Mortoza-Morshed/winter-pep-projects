@@ -1,22 +1,11 @@
 import React, { useState, useEffect } from "react";
-import {
-  CheckCircle,
-  XCircle,
-  Users,
-  TrendingUp,
-  Check,
-  X,
-  MessageSquare,
-  Calendar,
-  SearchX,
-} from "lucide-react";
+import { Check, X, Calendar, SearchX, MessageSquare, Clock } from "lucide-react";
 import api from "../../services/api";
 import Badge from "../../components/common/Badge";
-import Button from "../../components/common/Button";
 import toast from "react-hot-toast";
 import { useNotifications } from "../../context/NotificationsContext";
 
-const LeaveApprovals = () => {
+const AdminLeaveApprovals = () => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("Pending");
@@ -27,11 +16,9 @@ const LeaveApprovals = () => {
       try {
         const response = await api.get("/leaves/all");
         if (response.data.success) {
-          // Managers should only see Employee-submitted leaves
-          const employeeLeaves = response.data.leaves.filter(
-            (l) => l.employee?.role === "Employee",
-          );
-          setRequests(employeeLeaves);
+          // Admin only sees Manager-submitted leaves
+          const managerLeaves = response.data.leaves.filter((l) => l.employee?.role === "Manager");
+          setRequests(managerLeaves);
         }
       } catch (error) {
         console.error("Failed to fetch requests", error);
@@ -52,13 +39,13 @@ const LeaveApprovals = () => {
         toast.success(`Request ${action}d successfully`);
         setRequests(requests.map((req) => (req._id === id ? { ...req, status } : req)));
         addNotification({
-          title: `Leave ${status}`,
-          message: `${target?.employee?.name ?? "Employee"}'s ${target?.leaveType ?? "leave"} request has been ${status.toLowerCase()}.`,
+          title: `Manager Leave ${status}`,
+          message: `${target?.employee?.name ?? "Manager"}'s ${target?.leaveType ?? "leave"} request has been ${status.toLowerCase()}.`,
           type: action === "approve" ? "approve" : "reject",
         });
       }
     } catch (error) {
-      toast.error(`Failed to ${action} request`);
+      toast.error(error.response?.data?.message || `Failed to ${action} request`);
     }
   };
 
@@ -67,10 +54,7 @@ const LeaveApprovals = () => {
     return req.status === activeTab;
   });
 
-  const stats = {
-    pending: requests.filter((r) => r.status === "Pending").length,
-    onLeave: requests.filter((r) => r.status === "Approved").length, // Simulating for display
-  };
+  const pendingCount = requests.filter((r) => r.status === "Pending").length;
 
   if (loading) {
     return (
@@ -85,26 +69,26 @@ const LeaveApprovals = () => {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
         <div>
           <h1 className="text-3xl font-black text-gray-900 mb-1 tracking-tight">
-            Employee Leave Approvals
+            Manager Leave Approvals
           </h1>
           <p className="text-gray-500 font-medium text-lg">
-            Review and manage pending employee leave requests.
+            Review and manage leave requests submitted by Managers.
           </p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-3xl p-6 text-white shadow-xl shadow-orange-200/50 relative overflow-hidden group">
+        <div className="bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-3xl p-6 text-white shadow-xl shadow-indigo-200/50 relative overflow-hidden group">
           <div className="absolute right-0 top-0 w-32 h-32 bg-white opacity-10 rounded-full blur-2xl -mr-10 -mt-10 group-hover:opacity-20 transition-opacity duration-700"></div>
           <div className="flex items-center justify-between mb-4 relative z-10">
-            <span className="text-orange-100 font-bold uppercase tracking-widest text-xs">
+            <span className="text-indigo-100 font-bold uppercase tracking-widest text-xs">
               Action Required
             </span>
-            <MessageSquare className="text-orange-200" size={24} />
+            <MessageSquare className="text-indigo-200" size={24} />
           </div>
           <div className="flex items-baseline gap-2 relative z-10">
-            <h2 className="text-5xl font-black">{stats.pending}</h2>
-            <span className="text-orange-200 font-bold">Requests</span>
+            <h2 className="text-5xl font-black">{pendingCount}</h2>
+            <span className="text-indigo-200 font-bold">Requests</span>
           </div>
         </div>
 
@@ -112,20 +96,20 @@ const LeaveApprovals = () => {
           <div className="absolute right-0 top-0 w-32 h-32 bg-white opacity-10 rounded-full blur-2xl -mr-10 -mt-10 group-hover:opacity-20 transition-opacity duration-700"></div>
           <div className="flex items-center justify-between mb-4 relative z-10">
             <span className="text-zinc-300 font-bold uppercase tracking-widest text-xs">
-              Employees Away
+              Total Manager Requests
             </span>
             <Calendar className="text-zinc-400" size={24} />
           </div>
           <div className="flex items-baseline gap-2 relative z-10">
-            <h2 className="text-5xl font-black">{stats.onLeave}</h2>
-            <span className="text-zinc-400 font-bold">Today</span>
+            <h2 className="text-5xl font-black">{requests.length}</h2>
+            <span className="text-zinc-400 font-bold">All Time</span>
           </div>
         </div>
       </div>
 
       {/* Tabs & Table Container */}
       <div className="bg-white rounded-3xl border border-gray-100 shadow-sm flex flex-col flex-1 overflow-hidden min-h-[500px]">
-        {/* Modern Tabs */}
+        {/* Tabs */}
         <div className="p-4 sm:p-6 border-b border-gray-100 bg-gray-50/50 overflow-x-auto no-scrollbar">
           <div className="flex gap-3 min-w-max">
             {["Pending", "Approved", "Rejected", "All History"].map((tab) => (
@@ -134,16 +118,16 @@ const LeaveApprovals = () => {
                 onClick={() => setActiveTab(tab)}
                 className={`px-5 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${
                   activeTab === tab
-                    ? "bg-white text-zinc-700 shadow-sm ring-1 ring-gray-200 shadow-blue-100/50"
+                    ? "bg-white text-zinc-700 shadow-sm ring-1 ring-gray-200"
                     : "text-gray-500 hover:text-gray-900 hover:bg-white/60"
                 }`}
               >
                 {tab}
-                {tab === "Pending" && stats.pending > 0 && (
+                {tab === "Pending" && pendingCount > 0 && (
                   <span
-                    className={`px-2 py-0.5 rounded-lg text-xs ${activeTab === tab ? "bg-blue-100 text-blue-700" : "bg-orange-100 text-orange-600"}`}
+                    className={`px-2 py-0.5 rounded-lg text-xs ${activeTab === tab ? "bg-indigo-100 text-indigo-700" : "bg-orange-100 text-orange-600"}`}
                   >
-                    {stats.pending}
+                    {pendingCount}
                   </span>
                 )}
               </button>
@@ -151,13 +135,13 @@ const LeaveApprovals = () => {
           </div>
         </div>
 
-        {/* Table Data Grid */}
+        {/* Table */}
         <div className="overflow-x-auto flex-1 bg-white">
           <table className="w-full text-left border-collapse whitespace-nowrap">
             <thead className="sticky top-0 z-10 bg-white border-b border-gray-100">
               <tr>
                 <th className="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest bg-gray-50/50">
-                  Employee
+                  Manager
                 </th>
                 <th className="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest bg-gray-50/50">
                   Leave Details
@@ -176,18 +160,18 @@ const LeaveApprovals = () => {
             <tbody className="divide-y divide-gray-50">
               {filteredRequests.length > 0 ? (
                 filteredRequests.map((req) => (
-                  <tr key={req._id} className="hover:bg-blue-50/30 transition-colors group">
+                  <tr key={req._id} className="hover:bg-indigo-50/20 transition-colors group">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-4">
-                        <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-50 to-blue-50 flex items-center justify-center text-zinc-700 font-black text-lg border border-indigo-100/50 shadow-sm group-hover:scale-105 transition-transform">
+                        <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-50 to-blue-50 flex items-center justify-center text-indigo-700 font-black text-lg border border-indigo-100/50 shadow-sm group-hover:scale-105 transition-transform">
                           {req.employee?.name?.charAt(0)}
                         </div>
                         <div>
                           <div className="font-bold text-gray-900 text-[15px]">
                             {req.employee?.name}
                           </div>
-                          <div className="text-[11px] text-gray-400 font-bold uppercase tracking-widest mt-0.5">
-                            {req.employee?.employeeId || "EMP-000"}
+                          <div className="text-[11px] text-indigo-400 font-bold uppercase tracking-widest mt-0.5">
+                            {req.employee?.employeeId || "MGR"} · Manager
                           </div>
                         </div>
                       </div>
@@ -204,7 +188,7 @@ const LeaveApprovals = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4 text-center">
-                      <div className="text-sm font-black text-zinc-700 bg-blue-50 inline-block px-3 py-1 rounded-lg">
+                      <div className="text-sm font-black text-zinc-700 bg-indigo-50 inline-block px-3 py-1 rounded-lg">
                         {req.numberOfDays} Day{req.numberOfDays !== 1 ? "s" : ""}
                       </div>
                       <div className="text-[11px] text-gray-400 font-bold mt-1.5">
@@ -255,8 +239,9 @@ const LeaveApprovals = () => {
                       <div className="bg-gray-50 p-4 rounded-full">
                         <SearchX size={40} strokeWidth={1.5} className="text-gray-400" />
                       </div>
-                      <p className="font-black uppercase tracking-widest text-sm text-gray-400">
-                        No requests found in this category
+                      <p className="text-gray-400 font-bold text-sm">
+                        No {activeTab !== "All History" ? activeTab.toLowerCase() : ""} manager
+                        leave requests
                       </p>
                     </div>
                   </td>
@@ -270,4 +255,4 @@ const LeaveApprovals = () => {
   );
 };
 
-export default LeaveApprovals;
+export default AdminLeaveApprovals;

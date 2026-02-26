@@ -43,11 +43,13 @@ const Sidebar = ({ isOpen, onClose }) => {
     Manager: [
       { icon: LayoutDashboard, label: "Dashboard", path: "/manager-dashboard" },
       { icon: CheckSquare, label: "Leave Approvals", path: "/approvals" },
+      { icon: CalendarPlus, label: "Apply Leave", path: "/manager/apply-leave" },
+      { icon: History, label: "My Leaves", path: "/manager/leave-history" },
     ],
     Admin: [
       { icon: LayoutDashboard, label: "Dashboard", path: "/admin" },
       { icon: Users, label: "User Management", path: "/admin/users" },
-      { icon: CheckSquare, label: "All Requests", path: "/approvals" },
+      { icon: CheckSquare, label: "Leave Approvals", path: "/admin/leave-approvals" },
       { icon: FileBarChart, label: "Reports", path: "/reports" },
     ],
   };
@@ -57,7 +59,11 @@ const Sidebar = ({ isOpen, onClose }) => {
       { icon: Receipt, label: "Submit Claim", path: "/reimbursements/submit" },
       { icon: History, label: "My Claims", path: "/reimbursements/history" },
     ],
-    Manager: [{ icon: Receipt, label: "Review Claims", path: "/reimbursements/review" }],
+    Manager: [
+      { icon: CheckSquare, label: "Review Claims", path: "/reimbursements/review" },
+      { icon: Receipt, label: "Submit Claim", path: "/manager/reimbursements/submit" },
+      { icon: History, label: "My Claims", path: "/manager/reimbursements/history" },
+    ],
     Admin: [{ icon: Receipt, label: "Review Claims", path: "/reimbursements/review" }],
   };
 
@@ -95,7 +101,7 @@ const Sidebar = ({ isOpen, onClose }) => {
             <LayoutGrid size={22} strokeWidth={2.5} />
           </div>
           <span className="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 tracking-tight">
-            Recharge
+            Luna
           </span>
         </div>
         {/* Close button — only visible on mobile */}

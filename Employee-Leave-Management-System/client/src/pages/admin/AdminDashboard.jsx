@@ -180,12 +180,6 @@ const AdminDashboard = () => {
         <div className="lg:col-span-2 bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden flex flex-col">
           <div className="p-6 border-b border-gray-50 flex justify-between items-center bg-gray-50/30">
             <h2 className="text-lg font-black text-gray-900">Recent Company Requests</h2>
-            <Link
-              to="/approvals"
-              className="text-zinc-700 text-sm font-bold flex items-center gap-1 hover:text-blue-700 transition-colors"
-            >
-              View All <ArrowRight size={14} />
-            </Link>
           </div>
           <div className="overflow-x-auto flex-1">
             <table className="w-full text-left border-collapse">

@@ -13,9 +13,9 @@ const router = express.Router();
 
 router.use(verifyToken);
 
-router.post("/apply", authorizeRoles("Employee"), applyLeave);
-router.get("/my", authorizeRoles("Employee"), getMyLeaves);
-router.get("/stats", authorizeRoles("Employee"), getLeaveStats);
+router.post("/apply", authorizeRoles("Employee", "Manager"), applyLeave);
+router.get("/my", authorizeRoles("Employee", "Manager"), getMyLeaves);
+router.get("/stats", authorizeRoles("Employee", "Manager"), getLeaveStats);
 
 router.get("/all", authorizeRoles("Manager", "Admin"), getAllLeaves);
 router.put("/:id/approve", authorizeRoles("Manager", "Admin"), approveLeave);

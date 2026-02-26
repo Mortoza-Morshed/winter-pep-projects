@@ -5,6 +5,7 @@ import api from "../../services/api";
 import Button from "../../components/common/Button";
 import Input from "../../components/common/Input";
 import toast from "react-hot-toast";
+import { useAuth } from "../../context/AuthContext";
 
 const ApplyLeave = () => {
   const [formData, setFormData] = useState({
@@ -16,6 +17,7 @@ const ApplyLeave = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [balance, setBalance] = useState(0);
   const navigate = useNavigate();
+  const { role } = useAuth();
 
   React.useEffect(() => {
     const fetchBalance = async () => {
@@ -70,7 +72,7 @@ const ApplyLeave = () => {
 
       if (response.data.success) {
         toast.success("Leave application submitted successfully!");
-        navigate("/dashboard");
+        navigate(role === "Manager" ? "/manager-dashboard" : "/dashboard");
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to submit application");

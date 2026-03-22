@@ -1,21 +1,63 @@
-# Recharge 
+# Luna
 
-A modern, full-stack application for managing employee leave requests and expense reimbursements. Featuring a beautiful, responsive React frontend and a Node.js/Express/MongoDB backend.
+A modern, full-stack employee leave and expense management system. Built with a React (Vite) frontend and a Node.js/Express/MongoDB backend, featuring role-based access control for Employees, Managers, and Admins.
+
+---
 
 ## Key Features
 
-- **Role-Based Access Control (RBAC)**: Distinct views for Employees, Managers, and Admins.
-- **Leave Management**: Apply for leaves, view your history, and see your accurate available balance (defaults to 30 days). Managers can approve or reject leaves.
-- **Expense Reimbursements**: Employees can submit claims for meals, equipment, travel, etc. Managers and Admins can approve or reject them.
-- **Mobile Responsive Layout**: Includes a pinned desktop sidebar that seamlessly converts to a slide-in drawer on mobile devices, triggered by a hamburger menu.
-- **Admin Dashboard**: Comprehensive user directory and role management with visual reports and system analytics.
-- **Modern UI**: Built with Tailwind CSS v4 and Lucide icons for a clean, professional, and dark-themed aesthetics.
-- **Authentication**: Secure JWT-based auth with auto-login and session persistence.
+- **Role-Based Access Control (RBAC)**: Distinct dashboards and permissions for Employees, Managers, and Admins.
+- **Leave Management**: Employees can apply for leaves, view their history, and track their available balance (defaults to 30 days). Managers and Admins can approve or reject requests.
+- **Expense Reimbursements**: Employees can submit claims for meals, equipment, travel, and more. Managers and Admins can approve or reject them.
+- **Admin Controls**: Full user directory, role management, system-wide leave approvals, and visual analytics via the Reports page.
+- **Notifications**: Real-time in-app notification context for status updates on leave and reimbursement requests.
+- **Mobile-Responsive Layout**: Pinned sidebar on desktop that converts to a slide-in drawer on mobile, triggered by a hamburger menu.
+- **Modern UI**: Built with Tailwind CSS v4, Lucide React icons, and a clean dark-themed aesthetic.
+- **Authentication**: Secure JWT-based auth with session persistence via `localStorage`.
+
+---
 
 ## Technology Stack
 
-- **Frontend**: React (Vite), React Router v6, Tailwind CSS v4, Context API, Axios, Lucide React, React Hot Toast.
-- **Backend**: Node.js, Express, MongoDB (Mongoose), JWT, Bcryptjs.
+| Layer      | Technology                                                                 |
+| :--------- | :------------------------------------------------------------------------- |
+| Frontend   | React 19 (Vite), React Router v7, Tailwind CSS v4, Context API, Axios       |
+| UI / Icons | Lucide React, React Hot Toast, Chart.js                                    |
+| Backend    | Node.js, Express v5                                                        |
+| Database   | MongoDB (Mongoose ODM)                                                     |
+| Auth       | JSON Web Tokens (JWT), Bcryptjs                                             |
+| Dev Tools  | Nodemon, dotenv                                                             |
+
+---
+
+## Project Structure
+
+```
+Employee-Leave-Management-System/
+├── client/                     # React frontend (Vite)
+│   └── src/
+│       ├── components/         # Reusable UI components (Layout, Sidebar, etc.)
+│       ├── context/            # AuthContext, NotificationsContext
+│       ├── pages/
+│       │   ├── LoginPage.jsx
+│       │   ├── RegisterPage.jsx
+│       │   ├── employee/       # Dashboard, ApplyLeave, LeaveHistory, ReimbursementForm, ReimbursementHistory
+│       │   ├── manager/        # Dashboard, LeaveApprovals, ReimbursementApprovals
+│       │   └── admin/          # Dashboard, UserManagement, AdminLeaveApprovals, Reports
+│       ├── routes/             # Protected route components
+│       ├── services/           # Axios API service modules
+│       └── utils/              # Helper utilities
+└── server/                     # Node.js/Express backend
+    ├── config/                 # Database connection
+    ├── controllers/            # Route handler logic
+    ├── middleware/             # Auth & role middleware
+    ├── models/                 # Mongoose schemas (User, LeaveRequest, Reimbursement)
+    ├── routes/                 # API routes (auth, leave, reimbursement, user)
+    ├── seed.js                 # Database seeder
+    └── server.js               # App entry point
+```
+
+---
 
 ## Getting Started
 
@@ -31,21 +73,24 @@ cd server
 npm install
 ```
 
-Configure `.env` in `server`:
+Create a `.env` file in the `server/` directory:
 
 ```env
 PORT=5000
-MONGO_URI=mongodb://localhost:27017/elms
+MONGO_URI=mongodb://127.0.0.1:27017/elms
 JWT_SECRET=your_super_secret_key
-JWT_EXPIRE=30d
+JWT_EXPIRE=7d
+CLIENT_URL=http://localhost:5173
 ```
 
-Populate initial data (users, leaves, and reimbursements):
+Seed the database, then start the dev server:
 
 ```bash
-node seed.js
+npm run seed
 npm run dev
 ```
+
+> The server will run on **http://localhost:5000**.
 
 ### 2. Frontend Setup
 
@@ -55,9 +100,30 @@ npm install
 npm run dev
 ```
 
+> The client will run on **http://localhost:5173**.
+
+---
+
+## API Endpoints
+
+| Method | Endpoint                            | Access         | Description                       |
+| :----- | :---------------------------------- | :------------- | :-------------------------------- |
+| POST   | `/api/auth/login`                   | Public         | User login                        |
+| POST   | `/api/auth/register`                | Public         | Register new employee             |
+| GET    | `/api/leaves`                       | Employee+      | Get leave requests                |
+| POST   | `/api/leaves`                       | Employee       | Submit a new leave request        |
+| PUT    | `/api/leaves/:id/status`            | Manager, Admin | Approve or reject a leave         |
+| GET    | `/api/reimbursements`               | Employee+      | Get reimbursement claims          |
+| POST   | `/api/reimbursements`               | Employee       | Submit a reimbursement claim      |
+| PUT    | `/api/reimbursements/:id/status`    | Manager, Admin | Approve or reject a reimbursement |
+| GET    | `/api/users`                        | Admin          | List all users                    |
+| PUT    | `/api/users/:id/role`               | Admin          | Update a user's role              |
+
+---
+
 ## Test Credentials (Seeded)
 
-Running `node seed.js` in the server directory provides the following pre-populated test accounts:
+Run `npm run seed` in the `server/` directory to populate the database with the following test accounts:
 
 | Role         | Name          | Email               | Password    |
 | :----------- | :------------ | :------------------ | :---------- |
@@ -66,10 +132,22 @@ Running `node seed.js` in the server directory provides the following pre-popula
 | **Employee** | John Employee | emp1@company.com    | Emp@123     |
 | **Employee** | Alice Smith   | emp2@company.com    | Emp@123     |
 
-## Project Structure
-
-- `/server`: API logic, models, controllers, and middleware.
-- `/client`: React source code, context, components, and pages.
-
 ---
 
+## Available Scripts
+
+### Server (`/server`)
+
+| Command         | Description                          |
+| :-------------- | :----------------------------------- |
+| `npm run dev`   | Start backend with Nodemon (hot reload) |
+| `npm start`     | Start backend with Node              |
+| `npm run seed`  | Seed the database with test data     |
+
+### Client (`/client`)
+
+| Command         | Description                       |
+| :-------------- | :-------------------------------- |
+| `npm run dev`   | Start Vite dev server             |
+| `npm run build` | Build for production              |
+| `npm run preview` | Preview production build        |
